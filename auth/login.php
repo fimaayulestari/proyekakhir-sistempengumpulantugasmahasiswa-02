@@ -35,14 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $user = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password'])) {
+    if ($user && password_verify($password, $user['PASSWORD'])) {
 
         $_SESSION['user_id']   = $user['id'];
         $_SESSION['username']  = $user['username'];
-        $_SESSION['role']      = $user['role'];
+        $_SESSION['role']      = $user['ROLE'];
         $_SESSION['full_name'] = $user['full_name'];
+        $_SESSION['photo'] = $user['photo'];
 
-        if ($user['role'] == 'dosen') {
+        if ($user['ROLE'] == 'dosen') {
 
             header('Location: ../dosen/dashboard.php');
 

@@ -94,7 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!$error) {
 
-        $is_late = (time() > strtotime($task['deadline'])) ? 1 : 0;
+        date_default_timezone_set('Asia/Jakarta');
+
+        $currentTime = new DateTime("now", new DateTimeZone("Asia/Jakarta"));
+        $deadlineTime = new DateTime($task['deadline'], new DateTimeZone("Asia/Jakarta"));
+
+        $is_late = ($currentTime > $deadlineTime) ? 1 : 0;
 
         if ($submission) {
 
@@ -160,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$isDeadlinePassed = strtotime($task['deadline']) < time();
+$isDeadlinePassed = date('Y-m-d H:i:s') > $task['deadline'];
 
 ?>
 

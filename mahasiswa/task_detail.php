@@ -172,468 +172,295 @@ $classes = $classSidebar->fetchAll();
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-
-body{
-    margin:0;
-    background:#f1f3f4;
-    font-family:Arial,sans-serif;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:64px;
-    background:white;
-    border-bottom:1px solid #dadce0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 24px;
-    z-index:999;
-}
-
-.nav-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    font-size:28px;
-}
-
-.logo-text{
-    font-size:30px;
-    color:#5f6368;
-}
-
-.menu-btn{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.menu-btn:hover{
-    background:#f1f3f4;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-    overflow-y:auto;
-    transition:.3s;
-}
-
-.sidebar.closed{
-    transform:translateX(-240px);
-}
-
-.sidebar-menu{
-    padding:12px 0;
-}
-
-.sidebar-item{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    height:48px;
-    padding:0 20px;
-    color:#202124;
-    text-decoration:none;
-    border-top-right-radius:24px;
-    border-bottom-right-radius:24px;
-    margin-right:12px;
-    font-size:14px;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-active{
-    background:#c2e7ff;
-    font-weight:600;
-}
-
-.sidebar-title{
-    padding:18px 24px 10px;
-    font-size:12px;
-    color:#5f6368;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.class-link{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    padding:10px 24px;
-    text-decoration:none;
-    color:#202124;
-}
-
-.class-link:hover{
-    background:#e8eaed;
-}
-
-.class-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#d2e3fc;
-    color:#1967d2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    flex-shrink:0;
-}
-
-.class-info{
-    flex:1;
-}
-
-.class-name{
-    font-size:14px;
-    font-weight:600;
-}
-
-.class-sub{
-    font-size:12px;
-    color:#5f6368;
-}
-
-.main{
-    margin-left:240px;
-    padding-top:88px;
-    padding-left:28px;
-    padding-right:28px;
-    padding-bottom:40px;
-    transition:.3s;
-}
-
-.main.full{
-    margin-left:0 !important;
-}
-
-.content{
-    display:flex;
-    gap:32px;
-    align-items:flex-start;
-}
-
-.left{
-    flex:1;
-    min-width:0;
-}
-
-.right{
-    width:360px;
-    flex-shrink:0;
-}
-
-.card{
-    background:white;
-    border-radius:16px;
-    border:1px solid #dadce0;
-    padding:32px;
-}
-
-.file-box{
-    border:1px solid #dadce0;
-    border-radius:12px;
-    overflow:hidden;
-    display:flex;
-    margin-top:20px;
-}
-
-.file-left{
-    flex:1;
-    padding:14px;
-}
-
-.file-right{
-    width:70px;
-    background:#f1f3f4;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:26px;
-}
-
-.submit-btn{
-    width:100%;
-    height:48px;
-    border:none;
-    border-radius:999px;
-    background:#1a73e8;
-    color:white;
-    font-size:14px;
-    cursor:pointer;
-    margin-top:16px;
-}
-
-.submit-btn:hover{
-    background:#1765cc;
-}
-
-.unsubmit-btn{
-    width:100%;
-    height:48px;
-    border-radius:999px;
-    border:1px solid #5f6368;
-    background:white;
-    cursor:pointer;
-    margin-top:16px;
-}
-
-.upload-box{
-    border:2px dashed #dadce0;
-    border-radius:12px;
-    padding:24px;
-    text-align:center;
-}
-
-</style>
-
 </head>
 
-<body>
+<body class="bg-gray-100 overflow-x-hidden">
 
-<div class="navbar">
+<div class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-300 flex items-center justify-between px-3 md:px-5 z-50">
 
-    <div class="nav-left">
+    <div class="flex items-center gap-3 md:gap-4">
 
-        <div class="menu-btn" id="menuToggle">
-
+        <div id="menuToggle"
+             class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-xl hover:bg-gray-100 flex-shrink-0">
             ☰
-
         </div>
 
-        <div class="logo">
+        <div class="flex items-center gap-2">
 
-            <div class="logo-icon">
+            <div class="text-xl md:text-3xl">📚</div>
 
-                📚
-
-            </div>
-
-            <div class="logo-text">
-
+            <div class="text-xs sm:text-sm md:text-2xl text-gray-600 truncate max-w-[120px] sm:max-w-none">
                 Sistem Pengumpulan Tugas
-
             </div>
 
         </div>
 
     </div>
 
-    <div class="nav-right">
+    <div class="flex items-center gap-4 relative">
 
-    <a href="../logout.php"
-       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
 
-        Logout
+        <button 
+        onclick="profileMenu()"
+        class="focus:outline-none">
 
-    </a>
 
-    </div>
+        <?php if(!empty($_SESSION['photo'])): ?>
+
+        <img 
+        src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+        class="w-10 h-10 rounded-full object-cover border">
+
+
+        <?php else: ?>
+
+        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+
+        <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+        </div>
+
+        <?php endif; ?>
+
+
+        </button>
+
+
+        <div id="profileBox"
+        class="hidden absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border p-5 z-50">
+
+
+        <div class="flex justify-center">
+
+
+        <?php if(!empty($_SESSION['photo'])): ?>
+
+        <img 
+        src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+        class="w-24 h-24 rounded-full object-cover">
+
+
+        <?php else: ?>
+
+        <div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl">
+
+        <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+        </div>
+
+        <?php endif; ?>
+
+
+        </div>
+
+
+        <h2 class="text-center text-lg font-semibold mt-3">
+
+        <?= htmlspecialchars($_SESSION['full_name']) ?>
+
+        </h2>
+
+
+        <p class="text-center text-gray-500 text-sm">
+
+        <?= htmlspecialchars($_SESSION['username']) ?>
+
+        </p>
+
+
+        <a href="profile.php"
+
+        class="block text-center mt-4 border rounded-full py-2 text-blue-600 hover:bg-gray-100">
+
+        Manage Profile
+
+        </a>
+
+
+        <a href="../logout.php"
+
+        class="block text-center mt-3 bg-red-500 text-white rounded-full py-2">
+
+        Sign out
+
+        </a>
+
+
+        </div>
+
+
+        </div>
 
 </div>
 
-<div class="sidebar" id="sidebar">
+<div id="overlay"
+     class="hidden fixed inset-0 bg-black/40 z-40 md:hidden"></div>
 
-    <div class="sidebar-menu">
+<div id="sidebar"
+     class="fixed top-16 left-0 bottom-0 w-60 bg-gray-50 border-r border-gray-300 overflow-y-auto transition-transform duration-300 z-50 -translate-x-full">
+
+    <div class="py-3">
 
         <a href="dashboard.php"
-           class="sidebar-item">
-
-            🏠
-            <span>Home</span>
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
+            🏠 <span>Home</span>
         </a>
 
         <a href="calendar.php"
-           class="sidebar-item">
-
-            📅
-            <span>Calendar</span>
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
+            📅 <span>Calendar</span>
         </a>
 
-        <div class="sidebar-title">
-
-            Enrolled
-
+        <div class="px-6 pt-5 pb-2 text-xs text-gray-500 font-bold uppercase">
+            ENROLLED
         </div>
 
         <a href="todo.php"
-           class="sidebar-item">
-
-            📝
-            <span>To-do</span>
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
+            📝 <span>To-do</span>
         </a>
 
         <?php foreach($classes as $class): ?>
 
-            <a href="class_detail.php?id=<?= $class['id'] ?>"
-                class="class-link <?= $class['id'] == $task['class_id'] ? 'sidebar-active' : '' ?>">
+        <a href="class_detail.php?id=<?= $class['id'] ?>"
+           class="flex items-start gap-3 px-6 py-3 hover:bg-gray-200 <?= $class['id'] == $task['class_id'] ? 'bg-blue-100' : '' ?>">
 
-                <div class="class-avatar">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
 
-                    <?= strtoupper(substr($class['class_name'],0,1)) ?>
+                <?= strtoupper(substr($class['class_name'],0,1)) ?>
 
-                </div>
+            </div>
 
-                <div class="class-info">
+            <div class="flex-1">
 
-                    <div class="class-name">
+                <div class="text-sm font-medium">
 
-                        <?= htmlspecialchars($class['class_name']) ?>
-
-                    </div>
-
-                    <div class="class-sub">
-
-                        <?= htmlspecialchars($class['description']) ?>
-
-                    </div>
+                    <?= htmlspecialchars($class['class_name']) ?>
 
                 </div>
 
-            </a>
+                <div class="text-xs text-gray-500 mt-1">
+
+                    <?= htmlspecialchars($class['DESCRIPTION']) ?>
+
+                </div>
+
+            </div>
+
+        </a>
 
         <?php endforeach; ?>
 
         <a href="archived.php"
-           class="sidebar-item mt-4">
-
-            📦
-            <span>Archived classes</span>
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100 mt-4">
+            📦 <span>Archived Classes</span>
         </a>
 
     </div>
 
 </div>
 
-<div class="main" id="mainContent">
+<div id="mainContent"
+     class="ml-0 pt-20 md:pt-24 px-3 sm:px-5 md:px-7 pb-10 transition-all duration-300">
 
-    <div class="content">
+    <div class="relative h-32 sm:h-40 md:h-48 rounded-2xl sm:rounded-3xl overflow-hidden mb-6 text-white"
+         style="background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg');
+                background-size:cover;
+                background-position:center;">
 
-        <div class="left">
+        <div class="absolute inset-0 bg-black/30"></div>
 
-            <div class="card">
+        <div class="relative z-10 h-full flex flex-col justify-center px-4 sm:px-6 md:px-8">
 
-                <div class="flex items-start justify-between gap-6">
+            <h1 class="text-xl sm:text-2xl md:text-4xl font-semibold">
 
-                    <div class="flex gap-4 flex-1">
+                <?= htmlspecialchars($task['title']) ?>
 
-                        <div class="w-14 h-14 rounded-full bg-cyan-100 flex items-center justify-center text-2xl flex-shrink-0">
+            </h1>
 
+            <p class="text-sm sm:text-base md:text-lg mt-1 sm:mt-2">
+
+                <?= htmlspecialchars($task['class_name']) ?>
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+
+        <div class="lg:col-span-8">
+
+            <div class="bg-white rounded-2xl shadow p-4 sm:p-6">
+
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4 mb-5">
+
+                    <div class="flex gap-3 sm:gap-4 min-w-0">
+
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 rounded-full bg-cyan-100 flex items-center justify-center text-xl sm:text-2xl">
                             📋
-
                         </div>
 
-                        <div class="flex-1">
+                        <div class="min-w-0">
 
-                            <h1 class="text-[22px] font-normal text-gray-900 leading-normal">
+                            <h2 class="text-lg sm:text-2xl font-semibold text-gray-800">
 
                                 <?= htmlspecialchars($task['title']) ?>
 
-                            </h1>
+                            </h2>
 
-                            <div class="text-gray-500 text-sm mt-2">
-
+                            <p class="text-gray-500 mt-1 text-sm sm:text-base">
                                 Diposting dosen
-
-                            </div>
-
-                            <div class="text-gray-700 text-sm mt-1">
-
-                                <?= htmlspecialchars($task['class_name']) ?>
-
-                            </div>
+                            </p>
 
                         </div>
 
                     </div>
 
-                    <div class="text-right flex-shrink-0 pt-2">
+                    <div class="text-red-500 font-medium text-sm sm:text-base whitespace-nowrap">
 
-                        <div class="text-gray-700 text-sm whitespace-nowrap">
-
-                            Due <?= date('d M Y H:i', strtotime($task['deadline'])) ?>
-
-                        </div>
+                        Due <?= date('d M Y H:i', strtotime($task['deadline'])) ?>
 
                     </div>
 
                 </div>
 
-                <div class="border-t border-gray-300 mt-2 pt-2">
+                <div class="border-t pt-5">
 
-                    <div class="text-[16px] leading-8 text-gray-800 whitespace-pre-line">
+                    <p class="text-gray-700 whitespace-pre-line leading-7 text-sm sm:text-base">
 
-                        <?= htmlspecialchars($task['description']) ?>
+                        <?= htmlspecialchars($task['DESCRIPTION']) ?>
 
-                    </div>
+                    </p>
 
                     <?php if(!empty($task['material_file'])): ?>
 
-    <a href="../uploads/materials/<?= htmlspecialchars($task['material_file']) ?>"
-       target="_blank"
-       class="file-box max-w-[420px] hover:bg-gray-50 transition">
+                    <a href="../uploads/materials/<?= htmlspecialchars($task['material_file']) ?>"
+                       target="_blank"
+                       class="mt-6 flex items-center justify-between border rounded-xl p-3 sm:p-4 hover:bg-gray-50 gap-3">
 
-        <div class="file-left">
+                        <div class="min-w-0">
 
-            <div class="font-semibold text-gray-800">
-                Materi Tugas
-            </div>
+                            <div class="font-semibold text-gray-800 text-sm sm:text-base">
+                                Materi Tugas
+                            </div>
 
-            <div class="text-sm text-gray-500 mt-1">
+                            <div class="text-xs sm:text-sm text-gray-500 truncate">
 
-                <?= htmlspecialchars(
-                    basename($task['material_file'])
-                ) ?>
+                                <?= htmlspecialchars(basename($task['material_file'])) ?>
 
-            </div>
+                            </div>
 
-        </div>
+                        </div>
 
-        <div class="file-right">
-            📄
-        </div>
+                        <div class="text-2xl sm:text-3xl flex-shrink-0">
+                            📄
+                        </div>
 
-    </a>
+                    </a>
 
-<?php endif; ?>
+                    <?php endif; ?>
 
                 </div>
 
@@ -641,133 +468,132 @@ body{
 
         </div>
 
-        <div class="right">
+        <div class="lg:col-span-4">
 
-            <div class="card">
+            <div class="bg-white rounded-2xl shadow p-4 sm:p-6">
 
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex justify-between items-center mb-5 sm:mb-6">
 
-                    <div class="text-[32px] text-gray-900">
+                    <h2 class="text-lg sm:text-2xl font-semibold">
+                        Your Work
+                    </h2>
 
-                        Your work
-
-                    </div>
-
-                    <div class="text-sm text-gray-500">
+                    <span class="text-xs sm:text-sm text-gray-500">
 
                         <?= $submission ? 'Turned in' : 'Missing' ?>
 
-                    </div>
+                    </span>
 
                 </div>
 
                 <?php if($submission): ?>
 
-    <?php if(!empty($submission['file_path'])): ?>
+                    <?php if(!empty($submission['file_path'])): ?>
 
-        <div class="file-box">
+                    <a href="../uploads/<?= htmlspecialchars($submission['file_path']) ?>"
+                       target="_blank"
+                       class="flex justify-between items-center border rounded-xl p-3 sm:p-4 mb-3 hover:bg-gray-50 gap-3">
 
-            <div class="file-left">
+                        <div class="min-w-0">
 
-                <a href="../uploads/<?= htmlspecialchars($submission['file_path']) ?>"
-                   target="_blank"
-                   class="text-blue-700 hover:underline break-all">
+                            <div class="text-blue-600 break-all text-sm sm:text-base">
 
-                    <?= htmlspecialchars($submission['file_path']) ?>
+                                <?= htmlspecialchars($submission['file_path']) ?>
 
-                </a>
+                            </div>
 
-                <div class="text-sm text-gray-500 mt-1">
-                    FILE
-                </div>
+                            <div class="text-xs sm:text-sm text-gray-500">
+                                FILE
+                            </div>
 
-            </div>
+                        </div>
 
-            <div class="file-right">
-                📄
-            </div>
+                        <div class="text-xl sm:text-2xl flex-shrink-0">
+                            📄
+                        </div>
 
-        </div>
+                    </a>
 
-    <?php endif; ?>
+                    <?php endif; ?>
 
-    <?php if(!empty($submission['submission_link'])): ?>
+                    <?php if(!empty($submission['submission_link'])): ?>
 
-        <div class="file-box mt-3">
+                    <a href="<?= htmlspecialchars($submission['submission_link']) ?>"
+                       target="_blank"
+                       class="flex justify-between items-center border rounded-xl p-3 sm:p-4 mb-3 hover:bg-gray-50 gap-3">
 
-            <div class="file-left">
+                        <div class="min-w-0">
 
-                <a href="<?= htmlspecialchars($submission['submission_link']) ?>"
-                   target="_blank"
-                   class="text-blue-700 hover:underline break-all">
+                            <div class="text-blue-600 break-all text-sm sm:text-base">
 
-                    <?= htmlspecialchars($submission['submission_link']) ?>
+                                <?= htmlspecialchars($submission['submission_link']) ?>
 
-                </a>
+                            </div>
 
-                <div class="text-sm text-gray-500 mt-1">
-                    LINK
-                </div>
+                            <div class="text-xs sm:text-sm text-gray-500">
+                                LINK
+                            </div>
 
-            </div>
+                        </div>
 
-            <div class="file-right">
-                🔗
-            </div>
+                        <div class="text-xl sm:text-2xl flex-shrink-0">
+                            🔗
+                        </div>
 
-        </div>
+                    </a>
 
-    <?php endif; ?>
+                    <?php endif; ?>
 
-    <form method="POST">
+                    <form method="POST">
 
-        <button
-            type="submit"
-            name="unsubmit"
-            class="unsubmit-btn">
+                        <button type="submit"
+                                name="unsubmit"
+                                class="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 sm:py-3 rounded-xl text-sm sm:text-base">
 
-            Unsubmit
+                            Unsubmit
 
-        </button>
+                        </button>
 
-    </form>
+                    </form>
 
                 <?php else: ?>
 
                     <form method="POST" enctype="multipart/form-data">
 
-                        <div class="upload-box">
+                        <div class="mb-4">
 
-                            <div class="text-gray-700 mb-4">
-                                Upload File Tugas
-                            </div>
+                            <label class="block mb-2 font-medium text-gray-700 text-sm sm:text-base">
 
-                            <input
-                                type="file"
-                                name="task_file"
-                                class="mb-4"
-                            >
+                                Upload File
 
-                            <div class="text-gray-700 mb-2">
-                                Atau Tambahkan Link
-                            </div>
+                            </label>
 
-                            <input
-                                type="url"
-                                name="submission_link"
-                                placeholder="https://drive.google.com/..."
-                                class="w-full border rounded-lg p-2"
-                            >
+                            <input type="file"
+                                   name="task_file"
+                                   class="w-full border rounded-lg p-2 text-sm">
 
                         </div>
 
-                        <button
-                            type="submit"
-                            name="submit_task"
-                            class="submit-btn"
-                        >
+                        <div class="mb-5">
 
-                            Turn in
+                            <label class="block mb-2 font-medium text-gray-700 text-sm sm:text-base">
+
+                                Atau Link
+
+                            </label>
+
+                            <input type="url"
+                                   name="submission_link"
+                                   placeholder="https://drive.google.com/..."
+                                   class="w-full border rounded-lg p-2 text-sm">
+
+                        </div>
+
+                        <button type="submit"
+                                name="submit_task"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 sm:py-3 rounded-xl text-sm sm:text-base">
+
+                            Turn In
 
                         </button>
 
@@ -785,21 +611,68 @@ body{
 
 <script>
 
-const menuToggle =
-    document.getElementById('menuToggle');
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const mainContent = document.getElementById('mainContent');
+const overlay = document.getElementById('overlay');
 
-const sidebar =
-    document.querySelector('.sidebar');
+const isMobile = () => window.innerWidth < 768;
 
-const mainContent =
-    document.getElementById('mainContent');
+// Menu selalu terbuka di awal, baik di HP maupun laptop
+let sidebarOpen = true;
 
-menuToggle.addEventListener('click', ()=>{
+function openSidebar() {
+    sidebarOpen = true;
+    sidebar.classList.remove('-translate-x-full');
 
-    sidebar.classList.toggle('closed');
-    mainContent.classList.toggle('full');
+    if (isMobile()) {
+        overlay.classList.remove('hidden');
+        mainContent.classList.remove('md:ml-60');
+        mainContent.classList.add('ml-0');
+    } else {
+        overlay.classList.add('hidden');
+        mainContent.classList.remove('ml-0');
+        mainContent.classList.add('md:ml-60');
+    }
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    mainContent.classList.remove('md:ml-60');
+    mainContent.classList.add('ml-0');
+}
+
+menuToggle.addEventListener('click', () => {
+
+    sidebarOpen ? closeSidebar() : openSidebar();
 
 });
+
+overlay.addEventListener('click', () => {
+
+    closeSidebar();
+
+});
+
+window.addEventListener('resize', () => {
+
+    // Pertahankan status terbuka/tertutup saat ukuran layar berubah
+    sidebarOpen ? openSidebar() : closeSidebar();
+
+});
+
+// Set tampilan awal sesuai status sidebarOpen
+sidebarOpen ? openSidebar() : closeSidebar();
+
+function profileMenu(){
+
+    const box = document.getElementById('profileBox');
+
+    box.classList.toggle('hidden');
+
+}
 
 </script>
 

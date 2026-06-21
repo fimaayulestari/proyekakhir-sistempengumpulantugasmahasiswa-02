@@ -104,24 +104,24 @@ $submissions->execute([$task_id]);
 
 <body class="bg-gray-100">
 
-<div class="max-w-7xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
 
-    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
 
-        <h1 class="text-2xl font-bold text-gray-800">
+        <h1 class="text-lg sm:text-2xl font-bold text-gray-800">
 
             <?= htmlspecialchars($task['title']) ?>
 
         </h1>
 
-        <p class="text-gray-600 mt-1">
+        <p class="text-gray-600 mt-1 text-sm sm:text-base">
 
             Kelas:
             <?= htmlspecialchars($task['class_name']) ?>
 
         </p>
 
-        <p class="text-red-500 font-semibold mt-2">
+        <p class="text-red-500 font-semibold mt-2 text-sm sm:text-base">
 
             Deadline:
             <?= date('d/m/Y H:i', strtotime($task['deadline'])) ?>
@@ -129,7 +129,7 @@ $submissions->execute([$task_id]);
         </p>
 
         <a href="tasks.php"
-           class="inline-block mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+           class="inline-block mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-sm sm:text-base">
 
             ← Kembali
 
@@ -139,33 +139,39 @@ $submissions->execute([$task_id]);
 
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
 
+        <div class="overflow-x-auto">
+
         <table class="min-w-full divide-y divide-gray-200">
 
             <thead class="bg-gray-50">
 
                 <tr>
 
-                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
                         Mahasiswa
                     </th>
 
-                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
                         Waktu
                     </th>
 
-                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
                         Status
                     </th>
 
-                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
                         File
                     </th>
 
-                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                        Link
+                    </th>
+
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
                         Nilai
                     </th>
 
-                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
+                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">
                         Aksi
                     </th>
 
@@ -179,7 +185,7 @@ $submissions->execute([$task_id]);
 
                 <tr>
 
-                    <td colspan="6"
+                    <td colspan="7"
                         class="text-center py-6 text-gray-500">
 
                         Belum ada pengumpulan tugas
@@ -194,7 +200,7 @@ $submissions->execute([$task_id]);
 
                     <tr>
 
-                        <td class="px-6 py-4">
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
 
                             <div class="font-semibold">
 
@@ -210,7 +216,7 @@ $submissions->execute([$task_id]);
 
                         </td>
 
-                        <td class="px-6 py-4 text-sm">
+                        <td class="px-3 sm:px-6 py-4 text-sm whitespace-nowrap">
 
                             <?= $sub['submitted_at']
                                 ? date('d/m/Y H:i', strtotime($sub['submitted_at']))
@@ -218,11 +224,16 @@ $submissions->execute([$task_id]);
 
                         </td>
 
-                        <td class="px-6 py-4">
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
 
                             <?php if ($sub['submitted_at']): ?>
 
-                                <?php if ($sub['is_late']): ?>
+                                <?php 
+                                $deadline = strtotime($task['deadline']);
+                                $submitted = strtotime($sub['submitted_at']);
+
+                                if ($submitted > $deadline):
+                                ?>
 
                                     <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-sm">
 
@@ -252,7 +263,7 @@ $submissions->execute([$task_id]);
 
                         </td>
 
-                        <td class="px-6 py-4">
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
 
                             <?php if (!empty($sub['file_path'])): ?>
 
@@ -278,7 +289,32 @@ $submissions->execute([$task_id]);
 
                         </td>
 
-                        <td class="px-6 py-4">
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+
+                            <?php if (!empty($sub['submission_link'])): ?>
+
+                                <a 
+                                    href="<?= htmlspecialchars($sub['submission_link']) ?>"
+                                    target="_blank"
+                                    class="text-blue-600 font-semibold hover:underline">
+
+                                    Buka Link
+
+                                </a>
+
+                            <?php else: ?>
+
+                                <span class="text-gray-400">
+
+                                    Tidak ada link
+
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
 
                             <?php if ($sub['grade'] !== null): ?>
 
@@ -300,7 +336,7 @@ $submissions->execute([$task_id]);
 
                         </td>
 
-                        <td class="px-6 py-4">
+                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
 
                             <button
                                 onclick='showGradeModal(
@@ -328,16 +364,18 @@ $submissions->execute([$task_id]);
 
         </table>
 
+        </div>
+
     </div>
 
 </div>
 
 <div id="gradeModal"
-     class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+     class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center px-4 z-50">
 
-    <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+    <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
 
-        <h2 class="text-xl font-bold mb-4">
+        <h2 class="text-lg sm:text-xl font-bold mb-4">
 
             Beri Nilai
 

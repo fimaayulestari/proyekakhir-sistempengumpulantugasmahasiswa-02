@@ -36,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $role = 'mahasiswa';
 
+    $full_name = $_POST['first_name'] . ' ' . $_POST['last_name'];
+
 
     if (
         empty($first_name) ||
@@ -76,9 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     username,
                     email,
                     password,
-                    role
+                    role,
+                    full_name,
+                    photo
                 )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->execute([
@@ -87,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $username,
                 $email,
                 $hashedPassword,
-                $role
+                $role,
+                $full_name
             ]);
 
             $success = "Registrasi berhasil!";
@@ -179,7 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php endif; ?>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="photo" class="w-full border p-2 rounded">
 
             <div class="grid grid-cols-2 gap-4 mb-4">
 

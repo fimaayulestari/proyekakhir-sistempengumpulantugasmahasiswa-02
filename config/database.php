@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'sistem_penugasan';
+$dbname = 'sistem_penugasan_copy';
 $username = 'root';
 $password = '';
 

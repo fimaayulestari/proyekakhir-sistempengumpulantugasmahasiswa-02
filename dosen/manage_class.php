@@ -86,214 +86,24 @@ $tasksList = $tasks->fetchAll();
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f1f3f4;
-}
-
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f1f3f4;
-    overflow-x:hidden;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:64px;
-    background:white;
-    border-bottom:1px solid #dadce0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    z-index:999;
-}
-
-.nav-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.menu-btn{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.menu-btn:hover{
-    background:#f1f3f4;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    font-size:28px;
-}
-
-.logo-text{
-    font-size:30px;
-    color:#5f6368;
-    font-weight:400;
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-    overflow-y:auto;
-    transition:.3s;
-}
-
-.sidebar.closed{
-    transform:translateX(-240px);
-}
-
-.main{
-    transition:.3s;
-}
-
-.main.full{
-    margin-left:0;
-}
-
-.sidebar-menu{
-    padding:12px 0;
-}
-
-.sidebar-item{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    height:48px;
-    padding:0 20px;
-    color:#202124;
-    text-decoration:none;
-    border-top-right-radius:24px;
-    border-bottom-right-radius:24px;
-    margin-right:12px;
-    font-size:14px;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-active{
-    background:#c2e7ff;
-    font-weight:600;
-}
-
-.sidebar-title{
-    padding:18px 24px 10px;
-    font-size:12px;
-    color:#5f6368;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.class-link{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    padding:10px 24px;
-    text-decoration:none;
-    color:#202124;
-}
-
-.class-link:hover{
-    background:#e8eaed;
-}
-
-.class-active{
-    background:#c2e7ff;
-}
-
-.class-active .class-name{
-    font-weight:600;
-}
-
-.class-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#d2e3fc;
-    color:#1967d2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    flex-shrink:0;
-}
-
-.class-info{
-    flex:1;
-}
-
-.class-name{
-    font-size:14px;
-}
-
-.class-sub{
-    font-size:12px;
-    color:#5f6368;
-}
-
-.main{
-    margin-left:240px;
-    padding-top:88px;
-    padding-left:28px;
-    padding-right:28px;
-    padding-bottom:40px;
-}
-
-</style>
-
 </head>
 
-<body>
+<body class="bg-gray-100 overflow-x-hidden">
 
-<div class="navbar">
+<div class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-300 flex items-center justify-between px-3 md:px-5 z-50">
 
-    <div class="nav-left">
+    <div class="flex items-center gap-3 md:gap-4">
 
-        <div class="menu-btn" id="menuToggle">
+        <div id="menuToggle"
+             class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-xl hover:bg-gray-100 flex-shrink-0">
             ☰
         </div>
 
-        <div class="logo">
+        <div class="flex items-center gap-2">
 
-            <div class="logo-icon">
-                📚
-            </div>
+            <div class="text-xl md:text-3xl">📚</div>
 
-            <div class="logo-text">
+            <div class="text-xs sm:text-sm md:text-2xl text-gray-600 truncate max-w-[120px] sm:max-w-none">
                 Sistem Pengumpulan Tugas
             </div>
 
@@ -301,79 +111,169 @@ body{
 
     </div>
 
-    <div class="nav-right">
+    <div class="flex items-center gap-4 relative">
 
 
-        <a href="../logout.php"
-           class="bg-red-500 text-white px-4 py-2 rounded-lg">
+    <button onclick="profileMenu()" class="focus:outline-none">
 
-            Logout
+    <?php if(!empty($_SESSION['photo'])): ?>
 
-        </a>
+    <img 
+    src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+    class="w-10 h-10 rounded-full object-cover border">
+
+
+    <?php else: ?>
+
+    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+
+    <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+    </div>
+
+    <?php endif; ?>
+
+
+    </button>
+
+
+    <div id="profileBox"
+    class="hidden absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border p-5 z-50">
+
+
+    <div class="flex justify-center">
+
+
+    <?php if(!empty($_SESSION['photo'])): ?>
+
+    <img 
+    src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+    class="w-24 h-24 rounded-full object-cover">
+
+
+    <?php else: ?>
+
+    <div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl">
+
+    <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+    </div>
+
+
+    <?php endif; ?>
+
+
+    </div>
+
+
+    <h2 class="text-center font-semibold text-lg mt-3">
+
+    <?= htmlspecialchars($_SESSION['full_name']) ?>
+
+    </h2>
+
+
+    <p class="text-center text-gray-500 text-sm">
+
+    <?= htmlspecialchars($_SESSION['username']) ?>
+
+    </p>
+
+
+    <a href="profile.php"
+    class="block text-center mt-4 border rounded-full py-2 text-blue-600">
+
+    Manage Profile
+
+    </a>
+
+
+    <a href="../logout.php"
+    class="block text-center mt-3 bg-red-500 text-white rounded-full py-2">
+
+    Sign out
+
+    </a>
+
+
+    </div>
+
+
+    </div>
 
     </div>
 
 </div>
 
-<div class="sidebar" id="sidebar">
+<div id="overlay"
+     class="hidden fixed inset-0 bg-black/40 z-40 md:hidden"></div>
 
-    <div class="sidebar-menu">
+<div id="sidebar"
+     class="fixed top-16 left-0 bottom-0 w-60 bg-gray-50 border-r border-gray-300 overflow-y-auto transition-transform duration-300 z-50 -translate-x-full">
+
+    <div class="py-3">
 
         <a href="dashboard.php"
-           class="sidebar-item">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             🏠
             <span>Home</span>
-
         </a>
 
         <a href="create_class.php"
-           class="sidebar-item">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             ➕
             <span>Buat Kelas</span>
-
         </a>
 
         <a href="create_task.php"
-           class="sidebar-item">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             📝
             <span>Buat Tugas</span>
+        </a>
+
+        <a href="laporan_tugas.php"
+            class="flex items-center gap-4 h-12 px-5 hover:bg-blue-100">
+
+            📊
+            <span>
+            Rekapan Tugas
+            </span>
 
         </a>
 
         <a href="tasks.php"
-            class="sidebar-item">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             📋
             <span>Semua Tugas</span>
-
         </a>
 
-        <div class="sidebar-title">
-
+        <div class="px-6 pt-5 pb-2 text-xs text-gray-500 font-bold uppercase">
             KELAS ANDA
-
         </div>
 
         <?php foreach($sidebarClass as $kelas): ?>
 
         <a href="manage_class.php?id=<?= $kelas['id'] ?>"
-            class="class-link <?= ($kelas['id'] == $class_id) ? 'class-active' : '' ?>">
+           class="flex items-start gap-3 px-6 py-3 hover:bg-gray-200 <?= ($kelas['id']==$class_id)?'bg-blue-100':'' ?>">
 
-            <div class="class-avatar">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
+
                 <?= strtoupper(substr($kelas['class_name'],0,1)) ?>
+
             </div>
 
-            <div class="class-info">
+            <div class="flex-1">
 
-                <div class="class-name">
+                <div class="text-sm font-medium">
+
                     <?= htmlspecialchars($kelas['class_name']) ?>
+
                 </div>
 
-                <div class="class-sub">
-                    <?= htmlspecialchars($kelas['description']) ?>
+                <div class="text-xs text-gray-500 mt-1">
+
+                    <?= htmlspecialchars($kelas['DESCRIPTION']) ?>
+
                 </div>
 
             </div>
@@ -383,7 +283,7 @@ body{
         <?php endforeach; ?>
 
         <a href="archived.php"
-           class="sidebar-item">
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100 mt-4">
 
             📦
             <span>Archived Classes</span>
@@ -394,213 +294,220 @@ body{
 
 </div>
 
-<div class="main">
+<div id="mainContent"
+     class="ml-0 pt-20 md:pt-24 px-3 sm:px-5 md:px-7 pb-10 transition-all duration-300">
 
-        <div class="rounded-3xl p-8 mb-6 text-white"
-            style="
-                background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg');
-                background-size:cover;
-                background-position:center;
-            ">
+    <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden mb-6 h-44 sm:h-56 md:h-64 bg-cover bg-center"
+         style="background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg')">
 
-            <div class="flex justify-between items-start">
+        <div class="absolute inset-0 bg-black/40"></div>
 
-                <div>
+        <div class="relative z-10 h-full flex flex-col justify-between p-5 sm:p-6 md:p-8 text-white">
 
-                    <h2 class="text-3xl font-bold">
+            <div>
 
-                        <?= htmlspecialchars($class['class_name']) ?>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold">
 
-                    </h2>
+                    <?= htmlspecialchars($class['class_name']) ?>
 
-                    <p class="text-gray-600 mt-1">
+                </h1>
 
-                        <?= htmlspecialchars($class['description']) ?>
+                <p class="mt-2 text-sm sm:text-base">
 
-                    </p>
+                    <?= htmlspecialchars($class['DESCRIPTION']) ?>
 
-                    <div class="mt-4 inline-flex items-center px-5 py-3 rounded-xl bg-white/90 backdrop-blur-sm shadow-md">
-
-                        <span class="font-bold text-gray-700 mr-2">
-                            Kode Kelas:
-                        </span>
-
-                        <span class="font-semibold text-blue-600 tracking-wider">
-                            <?= htmlspecialchars($class['class_code']) ?>
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="flex gap-3">
-
-                    <a href="create_task.php?class_id=<?= $class['id'] ?>"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl transition">
-
-                            + Tambah Tugas
-
-                    </a>
-
-                    <a href="edit_class.php?id=<?= $class['id'] ?>"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-xl transition">
-
-                            ✏ Edit Kelas
-
-                    </a>
-
-                    <a href="archive_class.php?id=<?= $class['id'] ?>"
-                        onclick="return confirm('Arsipkan kelas ini?')"
-                        class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-xl transition">
-
-                            📦 Arsipkan
-
-                    </a>
-
-                    <a href="dashboard.php"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-xl transition">
-
-                            Kembali
-
-                    </a>
-
-                </div>
+                </p>
 
             </div>
 
-        </div>
+            <div class="flex flex-wrap gap-2 sm:gap-3">
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white text-blue-600 px-4 sm:px-5 py-2 rounded-xl font-semibold text-sm sm:text-base">
 
-            <div class="bg-white rounded-2xl shadow-md p-6">
-
-                <h3 class="text-2xl font-bold mb-5">
-
-                    👨‍🎓 Daftar Mahasiswa
-                    (<?= count($studentsList) ?>)
-
-                </h3>
-
-                <div class="space-y-3 max-h-96 overflow-y-auto">
-
-                    <?php if (empty($studentsList)): ?>
-
-                        <p class="text-gray-500 text-center py-6">
-
-                            Belum ada mahasiswa yang bergabung
-
-                        </p>
-
-                    <?php else: ?>
-
-                        <?php foreach ($studentsList as $student): ?>
-
-                            <div class="border-b pb-3">
-
-                                <p class="font-semibold text-lg">
-
-                                    <?= htmlspecialchars($student['full_name']) ?>
-
-                                </p>
-
-                                <p class="text-sm text-gray-600">
-
-                                    <?= htmlspecialchars($student['email']) ?>
-
-                                    |
-
-                                    Bergabung:
-                                    <?= date('d/m/Y H:i', strtotime($student['enrolled_at'])) ?>
-
-                                </p>
-
-                            </div>
-
-                        <?php endforeach; ?>
-
-                    <?php endif; ?>
+                    Kode:
+                    <?= htmlspecialchars($class['class_code']) ?>
 
                 </div>
 
-            </div>
+                <a href="create_task.php?class_id=<?= $class['id'] ?>"
+                   class="bg-blue-600 hover:bg-blue-700 px-4 sm:px-5 py-2 rounded-xl text-sm sm:text-base">
 
-            <div class="bg-white rounded-2xl shadow-md p-6">
+                    + Tambah Tugas
 
-                <div class="flex justify-between items-center mb-5">
+                </a>
 
-                    <h3 class="text-2xl font-bold">
+                <a href="edit_class.php?id=<?= $class['id'] ?>"
+                   class="bg-yellow-500 hover:bg-yellow-600 px-4 sm:px-5 py-2 rounded-xl text-sm sm:text-base">
 
-                        📋 Daftar Tugas
-                        (<?= count($tasksList) ?>)
+                    ✏ Edit
 
-                    </h3>
+                </a>
 
-                    <a href="create_task.php?class_id=<?= $class['id'] ?>"
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm transition">
+                <a href="archive_class.php?id=<?= $class['id'] ?>"
+                   onclick="return confirm('Arsipkan kelas ini?')"
+                   class="bg-orange-500 hover:bg-orange-600 px-4 sm:px-5 py-2 rounded-xl text-sm sm:text-base">
 
-                        + Tambah
+                    📦 Arsipkan
 
-                    </a>
-
-                </div>
-
-                <div class="space-y-4 max-h-96 overflow-y-auto">
-
-                    <?php if (empty($tasksList)): ?>
-
-                        <p class="text-gray-500 text-center py-6">
-
-                            Belum ada tugas. Buat tugas baru!
-
-                        </p>
-
-                    <?php else: ?>
-
-                        <?php foreach ($tasksList as $task): ?>
-
-                            <div class="border rounded-xl p-4">
-
-                                <div class="flex justify-between items-start">
-
-                                    <div>
-
-                                        <h4 class="font-bold text-lg">
-
-                                            <?= htmlspecialchars($task['title']) ?>
-
-                                        </h4>
-
-                                        <p class="text-sm text-gray-600 mt-1">
-
-                                            Deadline:
-                                            <?= date('d/m/Y H:i', strtotime($task['deadline'])) ?>
-
-                                        </p>
-
-                                    </div>
-
-                                    <a href="view_submissions.php?task_id=<?= $task['id'] ?>"
-                                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition">
-
-                                        Lihat Pengumpulan
-
-                                    </a>
-
-                                </div>
-
-                            </div>
-
-                        <?php endforeach; ?>
-
-                    <?php endif; ?>
-
-                </div>
+                </a>
 
             </div>
 
         </div>
 
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+
+            <h3 class="text-2xl font-bold mb-5">
+
+                👨‍🎓 Daftar Mahasiswa
+                (<?= count($studentsList) ?>)
+
+            </h3>
+
+            <div class="space-y-3 max-h-96 overflow-y-auto">
+
+                <?php if(empty($studentsList)): ?>
+
+                    <p class="text-gray-500 text-center py-6">
+
+                        Belum ada mahasiswa yang bergabung
+
+                    </p>
+
+                <?php else: ?>
+
+                    <?php foreach($studentsList as $student): ?>
+
+                        <div class="border-b pb-3 flex items-center gap-4">
+
+
+                    <?php if(!empty($student['photo'])): ?>
+
+                        <img 
+                        src="../<?= htmlspecialchars($student['photo']) ?>"
+                        class="w-12 h-12 rounded-full object-cover border">
+
+
+                    <?php else: ?>
+
+                        <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+
+                            <?= strtoupper(substr($student['full_name'],0,1)) ?>
+
+                        </div>
+
+
+                    <?php endif; ?>
+
+
+                    <div>
+
+                        <p class="font-semibold">
+
+                            <?= htmlspecialchars($student['full_name']) ?>
+
+                        </p>
+
+                        <p class="text-sm text-gray-500">
+
+                            <?= htmlspecialchars($student['email']) ?>
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+                <?php endforeach; ?>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+
+            <div class="flex justify-between items-center mb-5">
+
+                <h3 class="text-2xl font-bold">
+
+                    📋 Daftar Tugas
+                    (<?= count($tasksList) ?>)
+
+                </h3>
+
+                <a href="create_task.php?class_id=<?= $class['id'] ?>"
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm">
+
+                    + Tambah
+
+                </a>
+
+            </div>
+
+            <div class="space-y-4 max-h-96 overflow-y-auto">
+
+                <?php if(empty($tasksList)): ?>
+
+                    <p class="text-gray-500 text-center py-6">
+
+                        Belum ada tugas
+
+                    </p>
+
+                <?php else: ?>
+
+                    <?php foreach($tasksList as $task): ?>
+
+                    <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition">
+
+                        <div class="flex justify-between items-center">
+
+                            <div>
+
+                                <h4 class="font-semibold">
+
+                                    <?= htmlspecialchars($task['title']) ?>
+
+                                </h4>
+
+                                <p class="text-sm text-gray-500">
+
+                                    Deadline:
+                                    <?= date('d/m/Y H:i', strtotime($task['deadline'])) ?>
+
+                                </p>
+
+                            </div>
+
+                            <a href="view_submissions.php?task_id=<?= $task['id'] ?>"
+                               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+
+                                Lihat Pengumpulan
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script>
 
@@ -610,15 +517,69 @@ document.getElementById('menuToggle');
 const sidebar =
 document.getElementById('sidebar');
 
-const main =
-document.querySelector('.main');
+const mainContent =
+document.getElementById('mainContent');
+
+const overlay =
+document.getElementById('overlay');
+
+const isMobile = () => window.innerWidth < 768;
+
+// Menu selalu terbuka di awal, baik di HP maupun laptop
+let sidebarOpen = true;
+
+function openSidebar() {
+    sidebarOpen = true;
+    sidebar.classList.remove('-translate-x-full');
+
+    if (isMobile()) {
+        overlay.classList.remove('hidden');
+        mainContent.classList.remove('md:ml-60');
+        mainContent.classList.add('ml-0');
+    } else {
+        overlay.classList.add('hidden');
+        mainContent.classList.remove('ml-0');
+        mainContent.classList.add('md:ml-60');
+    }
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    mainContent.classList.remove('md:ml-60');
+    mainContent.classList.add('ml-0');
+}
 
 menuToggle.addEventListener('click', ()=>{
 
-    sidebar.classList.toggle('closed');
-    main.classList.toggle('full');
+    sidebarOpen ? closeSidebar() : openSidebar();
 
 });
+
+overlay.addEventListener('click', ()=>{
+
+    closeSidebar();
+
+});
+
+window.addEventListener('resize', ()=>{
+
+    // Pertahankan status terbuka/tertutup saat ukuran layar berubah
+    sidebarOpen ? openSidebar() : closeSidebar();
+
+});
+
+// Set tampilan awal sesuai status sidebarOpen
+sidebarOpen ? openSidebar() : closeSidebar();
+
+function profileMenu(){
+
+    const box = document.getElementById('profileBox');
+
+    box.classList.toggle('hidden');
+
+}
 
 </script>
 

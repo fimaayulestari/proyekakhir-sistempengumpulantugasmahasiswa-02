@@ -61,450 +61,290 @@ $sidebarClasses = $sidebarStmt->fetchAll();
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f1f3f4;
-    overflow-x:hidden;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:64px;
-    background:white;
-    border-bottom:1px solid #dadce0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    z-index:999;
-}
-
-.nav-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.menu-btn{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.menu-btn:hover{
-    background:#f1f3f4;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    font-size:28px;
-}
-
-.logo-text{
-    font-size:30px;
-    color:#5f6368;
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-    overflow-y:auto;
-}
-
-.sidebar{
-    transition:transform .3s ease;
-}
-
-.sidebar.closed{
-    transform:translateX(-240px);
-}
-
-.sidebar-menu{
-    padding:12px 0;
-}
-
-.sidebar-item{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    height:48px;
-    padding:0 20px;
-    color:#202124;
-    text-decoration:none;
-    border-top-right-radius:24px;
-    border-bottom-right-radius:24px;
-    margin-right:12px;
-    font-size:14px;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-active{
-    background:#c2e7ff;
-    font-weight:600;
-}
-
-.sidebar-title{
-    padding:18px 24px 10px;
-    font-size:12px;
-    color:#5f6368;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.class-link{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    padding:10px 24px;
-    text-decoration:none;
-    color:#202124;
-}
-
-.class-link:hover{
-    background:#e8eaed;
-}
-
-.class-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#d2e3fc;
-    color:#1967d2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    flex-shrink:0;
-}
-
-.class-info{
-    flex:1;
-}
-
-.class-name{
-    font-size:14px;
-}
-
-.class-sub{
-    font-size:12px;
-    color:#5f6368;
-}
-
-.main{
-    margin-left:240px;
-    padding-top:88px;
-    padding-left:28px;
-    padding-right:28px;
-    padding-bottom:40px;
-
-    transition:.3s ease;
-}
-
-.main.full{
-    margin-left:0;
-}
-
-.banner{
-    background:#d3e3fd;
-    border-radius:24px;
-    padding:26px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:24px;
-}
-
-.banner-left{
-    display:flex;
-    gap:20px;
-    align-items:flex-start;
-}
-
-.banner-icon{
-    font-size:60px;
-}
-
-.banner-title{
-    font-size:18px;
-    color:#202124;
-    margin-bottom:8px;
-}
-
-.banner-desc{
-    color:#3c4043;
-    font-size:14px;
-}
-
-.class-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:20px;
-}
-
-.class-card{
-    background:white;
-    border:1px solid #dadce0;
-    border-radius:14px;
-    overflow:hidden;
-}
-
-.card-header{
-    height:110px;
-    padding:16px;
-    position:relative;
-    background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg');
-    background-size:cover;
-    background-position:center;
-    color:white;
-}
-
-.card-header::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,0.35);
-}
-
-.card-header-content{
-    position:relative;
-    z-index:2;
-}
-
-.card-title{
-    font-size:16px;
-    font-weight:600;
-}
-
-.card-subtitle{
-    font-size:13px;
-    margin-top:4px;
-}
-
-.teacher{
-    font-size:12px;
-    margin-top:6px;
-}
-
-.card-body{
-    height:70px;
-}
-
-.empty-card{
-    background:white;
-    padding:30px;
-    border-radius:14px;
-    text-align:center;
-}
-
-</style>
-
 </head>
 
-<body>
+<body class="bg-gray-100 overflow-x-hidden">
 
-<div class="navbar">
+<div class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-300 flex items-center justify-between px-3 md:px-5 z-50">
 
-<div class="nav-left">
+    <div class="flex items-center gap-3 md:gap-4">
 
-    <div class="menu-btn" id="menuToggle">
-        ☰
-    </div>
+        <div id="menuToggle"
+             class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-xl hover:bg-gray-100 flex-shrink-0">
+            ☰
+        </div>
 
-    <div class="logo">
+        <div class="flex items-center gap-2">
 
-        <div class="logo-icon">📚</div>
+            <div class="text-xl md:text-3xl">📚</div>
 
-        <div class="logo-text">
-            Sistem Pengumpulan Tugas
+            <div class="text-xs sm:text-sm md:text-2xl text-gray-600 truncate max-w-[120px] sm:max-w-none">
+                Sistem Pengumpulan Tugas
+            </div>
+
         </div>
 
     </div>
 
+    <div class="flex items-center gap-4 relative">
+
+
+        <button 
+        onclick="profileMenu()"
+        class="focus:outline-none">
+
+
+        <?php if(!empty($_SESSION['photo'])): ?>
+
+        <img 
+        src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+        class="w-10 h-10 rounded-full object-cover border">
+
+
+        <?php else: ?>
+
+        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+
+        <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+        </div>
+
+        <?php endif; ?>
+
+
+        </button>
+
+
+        <div id="profileBox"
+        class="hidden absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border p-5 z-50">
+
+
+        <div class="flex justify-center">
+
+
+        <?php if(!empty($_SESSION['photo'])): ?>
+
+        <img 
+        src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+        class="w-24 h-24 rounded-full object-cover">
+
+
+        <?php else: ?>
+
+        <div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl">
+
+        <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+        </div>
+
+        <?php endif; ?>
+
+
+        </div>
+
+
+        <h2 class="text-center text-lg font-semibold mt-3">
+
+        <?= htmlspecialchars($_SESSION['full_name']) ?>
+
+        </h2>
+
+
+        <p class="text-center text-gray-500 text-sm">
+
+        <?= htmlspecialchars($_SESSION['username']) ?>
+
+        </p>
+
+
+        <a href="profile.php"
+
+        class="block text-center mt-4 border rounded-full py-2 text-blue-600 hover:bg-gray-100">
+
+        Manage Profile
+
+        </a>
+
+
+        <a href="../logout.php"
+
+        class="block text-center mt-3 bg-red-500 text-white rounded-full py-2">
+
+        Sign out
+
+        </a>
+
+
+        </div>
+
+
+        </div>
+
 </div>
 
-<div class="nav-right">
+<div id="overlay"
+     class="hidden fixed inset-0 bg-black/40 z-40 md:hidden"></div>
 
-    <a href="../logout.php"
-       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+<div id="sidebar"
+     class="fixed top-16 left-0 bottom-0 w-60 bg-gray-50 border-r border-gray-300 overflow-y-auto transition-transform duration-300 z-50 -translate-x-full">
 
-        Logout
+    <div class="py-3">
 
-    </a>
+        <a href="dashboard.php"
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
 
-</div>
+            🏠 <span>Home</span>
 
-</div>
+        </a>
 
-<div class="sidebar" id="sidebar">
+        <a href="calendar.php"
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
 
-<div class="sidebar-menu">
+            📅 <span>Calendar</span>
 
-    <a href="dashboard.php"
-       class="sidebar-item">
+        </a>
 
-        🏠
-        <span>Home</span>
+        <div class="px-6 pt-5 pb-2 text-xs text-gray-500 font-bold uppercase">
 
-    </a>
+            ENROLLED
 
-    <a href="calendar.php"
-       class="sidebar-item">
+        </div>
 
-        📅
-        <span>Calendar</span>
+        <a href="todo.php"
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
 
-    </a>
+            📝 <span>To-do</span>
 
-    <div class="sidebar-title">
-        Enrolled
-    </div>
+        </a>
 
-    <a href="todo.php"
-       class="sidebar-item">
-
-        📝
-        <span>To-do</span>
-
-    </a>
-
-    <?php foreach($sidebarClasses as $class): ?>
+        <?php foreach($sidebarClasses as $class): ?>
 
         <a href="class_detail.php?id=<?= $class['id'] ?>"
-           class="class-link">
+           class="flex items-start gap-3 px-6 py-3 hover:bg-gray-200">
 
-            <div class="class-avatar">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
+
                 <?= strtoupper(substr($class['class_name'],0,1)) ?>
+
             </div>
 
-            <div class="class-info">
+            <div class="flex-1">
 
-                <div class="class-name">
+                <div class="text-sm font-medium">
+
                     <?= htmlspecialchars($class['class_name']) ?>
+
                 </div>
 
-                <div class="class-sub">
-                    <?= htmlspecialchars($class['description']) ?>
+                <div class="text-xs text-gray-500 mt-1">
+
+                    <?= htmlspecialchars($class['DESCRIPTION']) ?>
+
                 </div>
 
             </div>
 
         </a>
 
-    <?php endforeach; ?>
+        <?php endforeach; ?>
 
-    <a href="archived.php"
-       class="sidebar-item sidebar-active mt-4">
+        <a href="archived.php"
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full bg-blue-200 font-semibold mt-4">
 
-        📦
-        <span>Archived classes</span>
+            📦 <span>Archived Classes</span>
 
-    </a>
+        </a>
+
+    </div>
 
 </div>
 
-</div>
+<div id="mainContent"
+     class="ml-0 pt-20 md:pt-24 px-3 sm:px-5 md:px-7 pb-10 transition-all duration-300">
 
-<div class="main" id="mainContent">
+    <div class="bg-[#d7e3f4] rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-10 mb-6 sm:mb-8">
 
-<div class="banner">
+        <div class="flex items-center gap-4 sm:gap-6 md:gap-8">
 
-    <div class="banner-left">
-
-        <div class="banner-icon">
-            📦
-        </div>
-
-        <div>
-
-            <div class="banner-title">
-                Archived Classes
+            <div class="text-4xl sm:text-5xl md:text-6xl flex-shrink-0">
+                📦
             </div>
 
-            <div class="banner-desc">
-                Daftar kelas yang telah diarsipkan oleh dosen.
+            <div class="min-w-0">
+
+                <h1 class="text-xl sm:text-2xl md:text-4xl font-normal text-gray-800 mb-1 sm:mb-2">
+
+                    Archived Classes
+
+                </h1>
+
+                <p class="text-sm sm:text-base md:text-lg text-gray-700">
+
+                    Daftar kelas yang telah diarsipkan oleh dosen.
+
+                </p>
+
             </div>
 
         </div>
 
     </div>
 
-</div>
+    <?php if(count($classes) > 0): ?>
 
-<?php if(count($classes) > 0): ?>
-
-    <div class="class-grid">
+    <div class="space-y-3 sm:space-y-4">
 
         <?php foreach($classes as $class): ?>
 
-            <div class="class-card">
+        <div class="bg-white rounded-xl shadow hover:shadow-md transition p-4 sm:p-6">
 
-                <div class="card-header">
+            <div class="flex items-center gap-3 sm:gap-4">
 
-                    <div class="card-header-content">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-base sm:text-lg">
 
-                        <div class="card-title">
-                            <?= htmlspecialchars($class['class_name']) ?>
-                        </div>
-
-                        <div class="card-subtitle">
-                            <?= htmlspecialchars($class['class_code']) ?>
-                        </div>
-
-                        <div class="teacher">
-                            Kelas Diarsipkan
-                        </div>
-
-                    </div>
+                    <?= strtoupper(substr($class['class_name'],0,1)) ?>
 
                 </div>
 
-                <div class="card-body"></div>
+                <div class="min-w-0">
+
+                    <h2 class="text-base sm:text-lg font-semibold text-gray-800 truncate">
+
+                        <?= htmlspecialchars($class['class_name']) ?>
+
+                    </h2>
+
+                    <p class="text-xs sm:text-sm text-gray-500">
+
+                        <?= htmlspecialchars($class['class_code']) ?>
+
+                    </p>
+
+                    <p class="text-xs sm:text-sm text-red-500 mt-1">
+
+                        Kelas Diarsipkan
+
+                    </p>
+
+                </div>
 
             </div>
+
+        </div>
 
         <?php endforeach; ?>
 
     </div>
 
-<?php else: ?>
+    <?php else: ?>
 
-    <div class="empty-card">
+    <div class="bg-white rounded-xl shadow p-6 sm:p-10 text-center text-gray-500 text-sm sm:text-base">
 
         Belum ada kelas yang diarsipkan.
 
     </div>
 
-<?php endif; ?>
+    <?php endif; ?>
 
 </div>
 
@@ -513,13 +353,65 @@ body{
 const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const mainContent = document.getElementById('mainContent');
+const overlay = document.getElementById('overlay');
 
-menuToggle.addEventListener('click', function(){
+const isMobile = () => window.innerWidth < 768;
 
-    sidebar.classList.toggle('closed');
-    mainContent.classList.toggle('full');
+// Menu selalu terbuka di awal, baik di HP maupun laptop
+let sidebarOpen = true;
+
+function openSidebar() {
+    sidebarOpen = true;
+    sidebar.classList.remove('-translate-x-full');
+
+    if (isMobile()) {
+        overlay.classList.remove('hidden');
+        mainContent.classList.remove('md:ml-60');
+        mainContent.classList.add('ml-0');
+    } else {
+        overlay.classList.add('hidden');
+        mainContent.classList.remove('ml-0');
+        mainContent.classList.add('md:ml-60');
+    }
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    mainContent.classList.remove('md:ml-60');
+    mainContent.classList.add('ml-0');
+}
+
+menuToggle.addEventListener('click', () => {
+
+    sidebarOpen ? closeSidebar() : openSidebar();
 
 });
+
+overlay.addEventListener('click', () => {
+
+    closeSidebar();
+
+});
+
+window.addEventListener('resize', () => {
+
+    // Pertahankan status terbuka/tertutup saat ukuran layar berubah
+    sidebarOpen ? openSidebar() : closeSidebar();
+
+});
+
+// Set tampilan awal sesuai status sidebarOpen
+sidebarOpen ? openSidebar() : closeSidebar();
+
+function profileMenu(){
+
+    const box = document.getElementById('profileBox');
+
+    box.classList.toggle('hidden');
+
+}
 
 </script>
 

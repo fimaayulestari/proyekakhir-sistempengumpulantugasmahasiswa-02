@@ -90,283 +90,197 @@ $classes = $classSidebar->fetchAll();
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-
-body{
-    background:#f1f3f4;
-    font-family:'Arial',sans-serif;
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-    overflow-y:auto;
-    transition:.3s;
-}
-
-.sidebar.closed{
-    transform:translateX(-240px);
-}
-
-.main-content{
-    transition:.3s;
-}
-
-.main-content.full{
-    margin-left:0 !important;
-}
-
-.sidebar-menu{
-    padding:12px 0;
-}
-
-.sidebar-item{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    height:48px;
-    padding:0 20px;
-    color:#202124;
-    text-decoration:none;
-    border-top-right-radius:24px;
-    border-bottom-right-radius:24px;
-    margin-right:12px;
-    font-size:14px;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-title{
-    padding:18px 24px 10px;
-    font-size:12px;
-    color:#5f6368;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.class-link{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    padding:10px 24px;
-    text-decoration:none;
-    color:#202124;
-}
-
-.class-link:hover{
-    background:#e8eaed;
-}
-
-.class-active{
-    background:#c2e7ff;
-}
-
-.class-active .class-name{
-    font-weight:600;
-}
-
-.class-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#d2e3fc;
-    color:#1967d2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    flex-shrink:0;
-}
-
-.class-info{
-    flex:1;
-}
-
-.class-name{
-    font-size:14px;
-    font-weight:600;
-}
-
-.class-sub{
-    font-size:12px;
-    color:#5f6368;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:64px;
-    background:white;
-    border-bottom:1px solid #dadce0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    z-index:999;
-}
-
-.nav-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    font-size:28px;
-}
-
-.logo-text{
-    font-size:30px;
-    color:#5f6368;
-}
-
-.menu-btn{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.menu-btn:hover{
-    background:#f1f3f4;
-}
-
-</style>
-
 </head>
 
-<body>
+<body class="bg-gray-100 overflow-x-hidden">
 
-<div class="navbar">
+<div class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-300 flex items-center justify-between px-3 md:px-5 z-50">
 
-    <div class="nav-left">
+    <div class="flex items-center gap-3 md:gap-4">
 
-        <div class="menu-btn" id="menuToggle">
-
+        <div id="menuToggle"
+             class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-xl hover:bg-gray-100 flex-shrink-0">
             ☰
-
         </div>
 
-        <div class="logo">
+        <div class="flex items-center gap-2">
 
-            <div class="logo-icon">
+            <div class="text-xl md:text-3xl">📚</div>
 
-                📚
-
-            </div>
-
-            <div class="logo-text">
-
+            <div class="text-xs sm:text-sm md:text-2xl text-gray-600 truncate max-w-[120px] sm:max-w-none">
                 Sistem Pengumpulan Tugas
-
             </div>
 
         </div>
 
     </div>
 
-    <div class="nav-right">
+    <div class="flex items-center gap-4 relative">
 
-    <a href="../logout.php"
-       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
 
-        Logout
+        <button 
+        onclick="profileMenu()"
+        class="focus:outline-none">
 
-    </a>
 
-    </div>
+        <?php if(!empty($_SESSION['photo'])): ?>
+
+        <img 
+        src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+        class="w-10 h-10 rounded-full object-cover border">
+
+
+        <?php else: ?>
+
+        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+
+        <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+        </div>
+
+        <?php endif; ?>
+
+
+        </button>
+
+
+        <div id="profileBox"
+        class="hidden absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border p-5 z-50">
+
+
+        <div class="flex justify-center">
+
+
+        <?php if(!empty($_SESSION['photo'])): ?>
+
+        <img 
+        src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+        class="w-24 h-24 rounded-full object-cover">
+
+
+        <?php else: ?>
+
+        <div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl">
+
+        <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+        </div>
+
+        <?php endif; ?>
+
+
+        </div>
+
+
+        <h2 class="text-center text-lg font-semibold mt-3">
+
+        <?= htmlspecialchars($_SESSION['full_name']) ?>
+
+        </h2>
+
+
+        <p class="text-center text-gray-500 text-sm">
+
+        <?= htmlspecialchars($_SESSION['username']) ?>
+
+        </p>
+
+
+        <a href="profile.php"
+
+        class="block text-center mt-4 border rounded-full py-2 text-blue-600 hover:bg-gray-100">
+
+        Manage Profile
+
+        </a>
+
+
+        <a href="../logout.php"
+
+        class="block text-center mt-3 bg-red-500 text-white rounded-full py-2">
+
+        Sign out
+
+        </a>
+
+
+        </div>
+
+
+        </div>
 
 </div>
 
-<div class="sidebar" id="sidebar">
+<div id="overlay"
+     class="hidden fixed inset-0 bg-black/40 z-40 md:hidden"></div>
 
-    <div class="sidebar-menu">
+<div id="sidebar"
+     class="fixed top-16 left-0 bottom-0 w-60 bg-gray-50 border-r border-gray-300 overflow-y-auto transition-transform duration-300 z-50 -translate-x-full">
+
+    <div class="py-3">
 
         <a href="dashboard.php"
-            class="sidebar-item">
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
 
-            🏠
-            <span>Home</span>
+            🏠 <span>Home</span>
 
         </a>
 
         <a href="calendar.php"
-           class="sidebar-item">
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
 
-            📅
-            <span>Calendar</span>
+            📅 <span>Calendar</span>
 
         </a>
 
-        <div class="sidebar-title">
+        <div class="px-6 pt-5 pb-2 text-xs text-gray-500 font-bold uppercase">
 
-            Enrolled
+            ENROLLED
 
         </div>
 
         <a href="todo.php"
-           class="sidebar-item">
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
 
-            📝
-            <span>To-do</span>
+            📝 <span>To-do</span>
 
         </a>
 
         <?php foreach($classes as $c): ?>
 
-    <a href="class_detail.php?id=<?= $c['id'] ?>"
-       class="class-link <?= ($c['id'] == $class_id) ? 'class-active' : '' ?>">
+        <a href="class_detail.php?id=<?= $c['id'] ?>"
+           class="flex items-start gap-3 px-6 py-3 hover:bg-gray-200 <?= ($c['id'] == $class_id) ? 'bg-blue-100' : '' ?>">
 
-        <div class="class-avatar">
-            <?= strtoupper(substr($c['class_name'],0,1)) ?>
-        </div>
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
 
-        <div class="class-info">
+                <?= strtoupper(substr($c['class_name'],0,1)) ?>
 
-            <div class="class-name">
-                <?= htmlspecialchars($c['class_name']) ?>
             </div>
 
-            <div class="class-sub">
-                <?= htmlspecialchars($c['description']) ?>
+            <div class="flex-1">
+
+                <div class="text-sm font-medium">
+
+                    <?= htmlspecialchars($c['class_name']) ?>
+
+                </div>
+
+                <div class="text-xs text-gray-500 mt-1">
+
+                    <?= htmlspecialchars($c['DESCRIPTION'] ?? '') ?>
+
+                </div>
+
             </div>
 
-        </div>
+        </a>
 
-    </a>
-
-<?php endforeach; ?>
+        <?php endforeach; ?>
 
         <a href="archived.php"
-           class="sidebar-item mt-4">
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100 mt-4">
 
-            📦
-            <span>Archived classes</span>
+            📦 <span>Archived Classes</span>
 
         </a>
 
@@ -375,48 +289,53 @@ body{
 </div>
 
 <div id="mainContent"
-     class="main-content ml-[240px] pt-20 px-10 pb-10">
+     class="ml-0 pt-20 md:pt-24 px-3 sm:px-5 md:px-7 pb-10 transition-all duration-300">
 
-<div class="bg-[#546e7a] rounded-2xl overflow-hidden relative h-52 mb-5">
+    <div class="relative h-32 sm:h-40 md:h-48 rounded-2xl sm:rounded-3xl overflow-hidden mb-6 text-white"
+         style="background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg');
+                background-size:cover;
+                background-position:center;">
 
-    <div class="absolute left-8 bottom-20 text-white">
+        <div class="absolute inset-0 bg-black/30"></div>
 
-        <h1 class="text-4xl font-normal leading-tight mb-1">
+        <div class="relative z-10 h-full flex flex-col justify-center px-4 sm:px-6 md:px-8">
 
-            <?= htmlspecialchars($class['class_name']) ?>
+            <h1 class="text-2xl sm:text-3xl md:text-5xl font-normal mb-1 sm:mb-2 -mt-2 sm:-mt-4">
 
-        </h1>
+                <?= htmlspecialchars($class['class_name']) ?>
 
-        <p class="text-xl">
+            </h1>
 
-            People
+            <p class="text-sm sm:text-base md:text-xl">
 
-        </p>
+                People
+
+            </p>
+
+        </div>
 
     </div>
 
-</div>
+    <div class="bg-white rounded-xl shadow mb-6 overflow-x-auto">
 
-    <div class="bg-white rounded-xl shadow-sm mb-6">
-
-        <div class="flex gap-10 px-8 py-5 border-b">
+        <div class="flex min-w-max">
 
             <a href="class_detail.php?id=<?= $class['id'] ?>"
-               class="text-gray-500 hover:text-blue-600">
+               class="px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base text-gray-700 hover:bg-gray-50 whitespace-nowrap">
 
                 Stream
 
             </a>
 
             <a href="classwork.php?id=<?= $class['id'] ?>"
-               class="text-gray-500 hover:text-blue-600">
+               class="px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base text-gray-700 hover:bg-gray-50 whitespace-nowrap">
 
                 Classwork
 
             </a>
 
             <a href="people.php?id=<?= $class['id'] ?>"
-               class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-2">
+               class="px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-sm sm:text-base text-blue-600 border-b-2 border-blue-600 font-medium whitespace-nowrap">
 
                 People
 
@@ -426,87 +345,161 @@ body{
 
     </div>
 
-<div class="bg-white rounded-xl p-8 shadow-sm">
+    <div class="bg-white rounded-xl shadow p-4 sm:p-6 mb-6">
 
-    <h2 class="text-3xl font-light text-gray-800 mb-4">
-        Teachers
-    </h2>
+        <h2 class="text-lg sm:text-2xl text-blue-600 mb-3 sm:mb-4">
 
-    <div class="border-b mb-4"></div>
+            Teachers
 
-    <?php foreach($teachers as $teacher): ?>
+        </h2>
 
-        <div class="flex items-center gap-4 py-4 border-b">
+        <?php foreach($teachers as $teacher): ?>
 
-            <div class="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center font-bold">
+        <div class="flex items-center gap-3 sm:gap-4 py-3 sm:py-4 border-b last:border-0">
 
-                <?= strtoupper(substr($teacher['full_name'],0,1)) ?>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 rounded-full overflow-hidden bg-blue-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
 
-            </div>
+                <?php if(!empty($teacher['photo'])): ?>
 
-            <span class="text-lg">
+                    <img 
+                    src="../<?= htmlspecialchars($teacher['photo']) ?>"
+                    class="w-full h-full object-cover">
+
+                <?php else: ?>
+
+                    <?= strtoupper(substr($teacher['full_name'],0,1)) ?>
+
+                <?php endif; ?>
+
+                </div>
+            <div class="text-sm sm:text-lg truncate">
 
                 <?= htmlspecialchars($teacher['full_name']) ?>
 
-            </span>
+            </div>
 
         </div>
 
-    <?php endforeach; ?>
-
-    <div class="flex justify-between items-center mt-12 mb-4">
-
-        <h2 class="text-3xl font-light text-gray-800">
-            Classmates
-        </h2>
-
-        <span class="text-gray-500">
-            <?= count($students) ?> students
-        </span>
+        <?php endforeach; ?>
 
     </div>
 
-    <div class="border-b mb-4"></div>
+    <div class="bg-white rounded-xl shadow p-4 sm:p-6">
 
-    <?php foreach($students as $student): ?>
+        <div class="flex justify-between items-center mb-3 sm:mb-4">
 
-        <div class="flex items-center gap-4 py-4 border-b">
+            <h2 class="text-lg sm:text-2xl text-blue-600">
 
-            <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
+                Classmates
 
-                <?= strtoupper(substr($student['full_name'],0,1)) ?>
+            </h2>
 
-            </div>
+            <span class="text-xs sm:text-base text-gray-500 whitespace-nowrap">
 
-            <span class="text-lg">
-
-                <?= htmlspecialchars($student['full_name']) ?>
+                <?= count($students) ?> students
 
             </span>
 
         </div>
 
-    <?php endforeach; ?>
+        <?php foreach($students as $student): ?>
+
+        <div class="flex items-center gap-3 sm:gap-4 py-3 sm:py-4 border-b last:border-0">
+
+            <div class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 rounded-full overflow-hidden bg-blue-600 text-white flex items-center justify-center font-semibold text-sm sm:text-base">
+
+                <?php if(!empty($student['photo'])): ?>
+
+                    <img 
+                    src="../<?= htmlspecialchars($student['photo']) ?>"
+                    class="w-full h-full object-cover">
+
+                <?php else: ?>
+
+                    <?= strtoupper(substr($student['full_name'],0,1)) ?>
+
+                <?php endif; ?>
+
+                </div>
+
+            <div class="text-sm sm:text-lg truncate">
+
+                <?= htmlspecialchars($student['full_name']) ?>
+
+            </div>
+
+        </div>
+
+        <?php endforeach; ?>
+
+    </div>
 
 </div>
 
 <script>
 
-const menuToggle =
-    document.getElementById('menuToggle');
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const mainContent = document.getElementById('mainContent');
+const overlay = document.getElementById('overlay');
 
-const sidebar =
-    document.getElementById('sidebar');
+const isMobile = () => window.innerWidth < 768;
 
-const mainContent =
-    document.getElementById('mainContent');
+// Menu selalu terbuka di awal, baik di HP maupun laptop
+let sidebarOpen = true;
 
-menuToggle.addEventListener('click', ()=>{
+function openSidebar() {
+    sidebarOpen = true;
+    sidebar.classList.remove('-translate-x-full');
 
-    sidebar.classList.toggle('closed');
-    mainContent.classList.toggle('full');
+    if (isMobile()) {
+        overlay.classList.remove('hidden');
+        mainContent.classList.remove('md:ml-60');
+        mainContent.classList.add('ml-0');
+    } else {
+        overlay.classList.add('hidden');
+        mainContent.classList.remove('ml-0');
+        mainContent.classList.add('md:ml-60');
+    }
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    mainContent.classList.remove('md:ml-60');
+    mainContent.classList.add('ml-0');
+}
+
+menuToggle.addEventListener('click', () => {
+
+    sidebarOpen ? closeSidebar() : openSidebar();
 
 });
+
+overlay.addEventListener('click', () => {
+
+    closeSidebar();
+
+});
+
+window.addEventListener('resize', () => {
+
+    // Pertahankan status terbuka/tertutup saat ukuran layar berubah
+    sidebarOpen ? openSidebar() : closeSidebar();
+
+});
+
+// Set tampilan awal sesuai status sidebarOpen
+sidebarOpen ? openSidebar() : closeSidebar();
+
+function profileMenu(){
+
+    const box = document.getElementById('profileBox');
+
+    box.classList.toggle('hidden');
+
+}
 
 </script>
 

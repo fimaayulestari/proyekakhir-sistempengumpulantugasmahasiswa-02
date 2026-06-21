@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $title = trim($_POST['title']);
 
-    $description = trim($_POST['description']);
+    $DESCRIPTION = trim($_POST['DESCRIPTION']);
 
     $deadline = $_POST['deadline'];
 
@@ -57,19 +57,21 @@ if (!empty($_FILES['material_file']['name'])) {
         INSERT INTO tasks (
             class_id,
             title,
-            description,
+            DESCRIPTION,
             deadline,
+            publish_at,
             created_by,
             material_file
         )
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
         $class_id,
         $title,
-        $description,
+        $DESCRIPTION,
         $deadline,
+        $publish_at,
         $_SESSION['user_id'],
         $material_file
     ]);
@@ -94,481 +96,234 @@ if (!empty($_FILES['material_file']['name'])) {
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    background:#f1f3f4;
-    font-family:Arial,sans-serif;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:74px;
-    background:white;
-    border-bottom:1px solid #e5e7eb;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 24px;
-    z-index:1000;
-}
-
-.logo{
-    font-size:22px;
-    font-weight:700;
-    color:#2563eb;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-    overflow-y:auto;
-    transition:left .3s ease;
-}
-
-.sidebar.hidden-sidebar{
-    left:-240px;
-}
-
-.main{
-    margin-left:240px;
-    width:calc(100% - 240px);
-    padding:88px 28px 40px;
-    box-sizing:border-box;
-}
-
-.banner{
-    background:#d3e3fd;
-    border-radius:24px;
-    padding:26px;
-    margin-bottom:24px;
-}
-
-.banner-left{
-    display:flex;
-    gap:20px;
-    align-items:center;
-}
-
-.banner-icon{
-    font-size:60px;
-}
-
-.banner-title{
-    font-size:32px;
-    font-weight:700;
-    color:#202124;
-    margin-bottom:8px;
-}
-
-.banner-desc{
-    color:#3c4043;
-    font-size:15px;
-}
-
-.form-card{
-    background:white;
-    border-radius:24px;
-    padding:30px;
-    max-width:1000px;
-    margin:auto;
-    box-shadow:0 4px 10px rgba(0,0,0,.08);
-}
-
-.input{
-    width:100%;
-    border:1px solid #d1d5db;
-    border-radius:18px;
-    padding:16px 18px;
-    outline:none;
-    transition:0.2s;
-}
-
-.input:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
-}
-
-.label{
-    display:block;
-    font-weight:600;
-    margin-bottom:10px;
-    color:#374151;
-}
-
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f1f3f4;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:64px;
-    background:white;
-    border-bottom:1px solid #dadce0;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 18px;
-    z-index:999;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-}
-
-.sidebar-menu{
-    padding:12px 0;
-}
-
-.sidebar-item{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    height:48px;
-    padding:0 20px;
-    color:#202124;
-    text-decoration:none;
-    border-top-right-radius:24px;
-    border-bottom-right-radius:24px;
-    margin-right:12px;
-    font-size:14px;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-active{
-    background:#c2e7ff;
-    font-weight:600;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-active{
-    background:#c2e7ff;
-    font-weight:600;
-}
-
-.main{
-    margin-left:240px;
-    width:calc(100% - 240px);
-    padding:88px 28px 40px;
-    transition:.3s;
-}
-
-.main.full{
-    margin-left:0;
-    width:100%;
-}
-
-.sidebar-title{
-    padding:18px 24px 10px;
-    font-size:12px;
-    color:#5f6368;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.class-link{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    padding:10px 24px;
-    text-decoration:none;
-    color:#202124;
-}
-
-.class-link:hover{
-    background:#e8eaed;
-}
-
-.class-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#d2e3fc;
-    color:#1967d2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.class-info{
-    flex:1;
-}
-
-.class-name{
-    font-size:14px;
-}
-
-.class-sub{
-    font-size:12px;
-    color:#5f6368;
-}
-
-.nav-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.menu-btn{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.menu-btn:hover{
-    background:#f1f3f4;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    font-size:28px;
-}
-
-.logo-text{
-    font-size:30px;
-    color:#5f6368;
-}
-
-.form-card{
-    background:white;
-    border-radius:24px;
-    padding:30px;
-    width:100%;
-    max-width:none;
-    box-shadow:0 4px 10px rgba(0,0,0,.08);
-}
-
-.banner-create{
-    height:180px;
-    border-radius:24px;
-    overflow:hidden;
-
-    background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg');
-    background-size:cover;
-    background-position:center;
-
-    position:relative;
-    margin-bottom:24px;
-}
-
-.banner-create::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:rgba(25,103,210,.35);
-}
-
-.banner-content{
-    position:relative;
-    z-index:2;
-    color:white;
-    padding:40px;
-}
-
-.banner-content h1{
-    margin:0;
-    font-size:56px;
-    font-weight:300;
-}
-
-.banner-content p{
-    margin-top:12px;
-    font-size:18px;
-}
-
-</style>
-
 </head>
 
-<body>
+<body class="bg-gray-100 overflow-x-hidden">
 
-<div class="navbar">
+<!-- Mobile Overlay -->
+<div id="sidebarOverlay"
+     class="fixed inset-0 bg-black/40 z-40 hidden"
+     onclick="closeSidebar()"></div>
 
-    <div class="nav-left">
+<div class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-300 flex items-center justify-between px-4 z-50">
 
-        <div class="menu-btn" id="menuToggle">
+    <div class="flex items-center gap-3">
 
+        <div id="menuToggle"
+             class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-xl hover:bg-gray-100 flex-shrink-0">
             ☰
-
         </div>
 
-        <div class="logo">
+        <div class="flex items-center gap-2">
 
-            <div class="logo-icon">
-
+            <div class="text-2xl sm:text-3xl">
                 📚
-
             </div>
 
-            <div class="logo-text">
-
+            <div class="text-base sm:text-2xl text-gray-600 truncate">
                 Sistem Pengumpulan Tugas
-
             </div>
 
         </div>
 
     </div>
 
-    <div class="nav-right">
+    <div class="flex items-center gap-4 relative">
 
-    <a href="create_class.php"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
 
-        + Buat Kelas
+    <button onclick="profileMenu()" class="focus:outline-none">
+
+    <?php if(!empty($_SESSION['photo'])): ?>
+
+    <img 
+    src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+    class="w-10 h-10 rounded-full object-cover border">
+
+
+    <?php else: ?>
+
+    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+
+    <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+    </div>
+
+    <?php endif; ?>
+
+
+    </button>
+
+
+    <div id="profileBox"
+    class="hidden absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border p-5 z-50">
+
+
+    <div class="flex justify-center">
+
+
+    <?php if(!empty($_SESSION['photo'])): ?>
+
+    <img 
+    src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+    class="w-24 h-24 rounded-full object-cover">
+
+
+    <?php else: ?>
+
+    <div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl">
+
+    <?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+    </div>
+
+
+    <?php endif; ?>
+
+
+    </div>
+
+
+    <h2 class="text-center font-semibold text-lg mt-3">
+
+    <?= htmlspecialchars($_SESSION['full_name']) ?>
+
+    </h2>
+
+
+    <p class="text-center text-gray-500 text-sm">
+
+    <?= htmlspecialchars($_SESSION['username']) ?>
+
+    </p>
+
+
+    <a href="profile.php"
+    class="block text-center mt-4 border rounded-full py-2 text-blue-600">
+
+    Manage Profile
 
     </a>
+
 
     <a href="../logout.php"
-       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+    class="block text-center mt-3 bg-red-500 text-white rounded-full py-2">
 
-        Logout
+    Sign out
 
     </a>
+
+
+    </div>
+
+
+    </div>
 
     </div>
 
 </div>
 
-<div class="sidebar" id="sidebar">
+<div id="sidebar"
+class="fixed top-16 left-0 bottom-0 w-[240px]
+bg-gray-50 border-r border-gray-300
+overflow-y-auto transition-transform duration-300
+z-50 -translate-x-full">
 
-    <div class="sidebar-menu">
+    <div class="py-3">
 
         <a href="dashboard.php"
-            class="sidebar-item">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             🏠
             <span>Home</span>
-
         </a>
 
         <a href="create_class.php"
-            class="sidebar-item">
-
-             ➕
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
+            ➕
             <span>Buat Kelas</span>
-
         </a>
 
         <a href="create_task.php"
-            class="sidebar-item sidebar-active">
-    
-             📝
-             <span>Buat Tugas</span>
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full bg-blue-200 font-semibold">
+            📝
+            <span>Buat Tugas</span>
+        </a>
+
+        <a href="laporan_tugas.php"
+            class="flex items-center gap-4 h-12 px-5 hover:bg-blue-100">
+
+            📊
+            <span>
+            Rekapan Tugas
+            </span>
 
         </a>
 
         <a href="tasks.php"
-            class="sidebar-item">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             📋
             <span>Semua Tugas</span>
-
         </a>
 
-        <div class="sidebar-title">
+        <div class="px-6 pt-5 pb-2 text-xs text-gray-500 font-bold uppercase">
             KELAS ANDA
         </div>
 
         <?php foreach($allClasses as $class): ?>
 
-            <a href="manage_class.php?id=<?= $class['id'] ?>"
-               class="class-link">
+        <a href="manage_class.php?id=<?= $class['id'] ?>"
+           class="flex items-start gap-3 px-6 py-3 hover:bg-gray-200">
 
-                <div class="class-avatar">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
 
-                    <?= strtoupper(substr($class['class_name'],0,1)) ?>
+                <?= strtoupper(substr($class['class_name'],0,1)) ?>
 
-                </div>
+            </div>
 
-                <div class="class-info">
+            <div class="flex-1">
 
-                    <div class="class-name">
+                <div class="text-sm font-medium">
 
-                        <?= htmlspecialchars($class['class_name']) ?>
-
-                    </div>
-
-                    <div class="class-sub">
-
-                        <?= htmlspecialchars($class['description']) ?>
-
-                    </div>
+                    <?= htmlspecialchars($class['class_name']) ?>
 
                 </div>
 
-            </a>
+                <div class="text-xs text-gray-500 mt-1">
+
+                    <?= htmlspecialchars($class['DESCRIPTION'] ?? '') ?>
+
+                </div>
+
+            </div>
+
+        </a>
 
         <?php endforeach; ?>
 
         <a href="archived.php"
-           class="sidebar-item mt-4">
-
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100 mt-4">
             📦
             <span>Archived classes</span>
-
         </a>
 
     </div>
 
 </div>
 
-<div class="main">
+<div id="mainContent"
+    class="ml-0 pt-20 px-4 sm:px-7 pb-10 transition-all duration-300">
 
-    <div class="banner-create">
+    <div class="relative h-36 sm:h-56 rounded-2xl sm:rounded-3xl overflow-hidden mb-5 bg-cover bg-center"
+         style="background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg')">
 
-        <div class="banner-content">
+        <div class="absolute inset-0 bg-black/40"></div>
 
-            <h1>Buat Tugas</h1>
+        <div class="relative z-10 text-white p-6 sm:p-10">
 
-            <p>
+            <h1 class="text-3xl sm:text-5xl font-light">
+                Buat Tugas
+            </h1>
+
+            <p class="mt-2 sm:mt-3 text-sm sm:text-lg">
                 Tambahkan tugas baru untuk mahasiswa
             </p>
 
@@ -576,37 +331,30 @@ body{
 
     </div>
 
-    <div class="form-card">
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-8 shadow-sm">
 
         <form method="POST" enctype="multipart/form-data">
 
             <div class="mb-6">
 
-                <label class="label">
-
+                <label class="block font-semibold mb-2">
                     Pilih Kelas
-
                 </label>
 
                 <select
                     name="class_id"
-                    class="input"
                     required
-                >
+                    class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                     <option value="">
-
                         -- Pilih Kelas --
-
                     </option>
 
                     <?php foreach($allClasses as $class): ?>
 
-                        <option value="<?= $class['id'] ?>">
-
-                            <?= htmlspecialchars($class['class_name']) ?>
-
-                        </option>
+                    <option value="<?= $class['id'] ?>">
+                        <?= htmlspecialchars($class['class_name']) ?>
+                    </option>
 
                     <?php endforeach; ?>
 
@@ -616,97 +364,82 @@ body{
 
             <div class="mb-6">
 
-                <label class="label">
-
+                <label class="block font-semibold mb-2">
                     Judul Tugas
-
                 </label>
 
                 <input
                     type="text"
                     name="title"
-                    class="input"
                     required
-                >
+                    class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
             </div>
 
             <div class="mb-6">
 
-                <label class="label">
-
+                <label class="block font-semibold mb-2">
                     Deskripsi
-
                 </label>
 
                 <textarea
-                    name="description"
+                    name="DESCRIPTION"
                     rows="6"
-                    class="input"
                     required
-                ></textarea>
-
+                    class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </textarea>
             </div>
 
             <div class="mb-6">
 
-                <label class="label">
-
+                <label class="block font-semibold mb-2">
                     Deadline
-
                 </label>
 
                 <input
                     type="datetime-local"
                     name="deadline"
-                    class="input"
                     required
-                >
+                    class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
             </div>
 
-            <div class="mb-8">
+            <div class="mb-6">
 
-                <label class="label">
-
+                <label class="block font-semibold mb-2">
                     Tampilkan Tugas Pada
-
                 </label>
 
                 <input
                     type="datetime-local"
                     name="publish_at"
-                    class="input"
                     required
-                >
+                    class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
             </div>
 
-            <div class="mb-4">
+            <div class="mb-8">
 
-    <label class="block font-semibold mb-2">
+                <label class="block font-semibold mb-2">
+                    Materi Tugas (PDF, PPT, DOCX, ZIP)
+                </label>
 
-        Materi Tugas (PDF, PPT, DOCX, ZIP)
+                <input
+                    type="file"
+                    name="material_file"
+                    class="w-full border border-gray-300 rounded-xl p-3">
 
-    </label>
-
-    <input
-        type="file"
-        name="material_file"
-        class="w-full border rounded-lg p-2">
-
-</div>
+            </div>
 
             <button
                 type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-semibold transition"
-            >
+                class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-8 py-4 rounded-xl font-semibold transition-colors">
 
                 Buat Tugas
 
             </button>
 
-            </form>
+        </form>
 
     </div>
 
@@ -714,15 +447,60 @@ body{
 
 <script>
 
-const menuToggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-const main = document.querySelector('.main');
+const menuToggle  = document.getElementById("menuToggle");
+const sidebar     = document.getElementById("sidebar");
+const mainContent = document.getElementById("mainContent");
+const overlay     = document.getElementById("sidebarOverlay");
 
-menuToggle.addEventListener('click', () => {
+const isMobile = () => window.innerWidth < 768;
 
-    sidebar.classList.toggle('hidden-sidebar');
-    main.classList.toggle('full');
+// Sidebar selalu terbuka di awal
+let sidebarOpen = true;
 
+function openSidebar() {
+    sidebarOpen = true;
+    sidebar.classList.remove("-translate-x-full");
+    if (isMobile()) {
+        overlay.classList.remove("hidden");
+    } else {
+        overlay.classList.add("hidden");
+        mainContent.classList.remove("ml-0");
+        mainContent.classList.add("ml-[240px]");
+    }
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+    if (!isMobile()) {
+        mainContent.classList.remove("ml-[240px]");
+        mainContent.classList.add("ml-0");
+    }
+}
+
+// Inisialisasi tampilan awal
+openSidebar();
+
+menuToggle.addEventListener("click", () => {
+    sidebarOpen ? closeSidebar() : openSidebar();
+});
+
+window.addEventListener("resize", () => {
+    if (sidebarOpen) openSidebar();
+});
+
+function profileMenu() {
+    const box = document.getElementById("profileBox");
+    box.classList.toggle("hidden");
+}
+
+document.addEventListener("click", (e) => {
+    const box = document.getElementById("profileBox");
+    const btn = e.target.closest("button[onclick='profileMenu()']");
+    if (!btn && !box.contains(e.target)) {
+        box.classList.add("hidden");
+    }
 });
 
 </script>

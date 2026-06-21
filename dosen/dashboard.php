@@ -12,11 +12,16 @@ if ($_SESSION['role'] != 'dosen') {
 }
 
 $stmt = $pdo->prepare("
-    SELECT *
+    SELECT 
+        classes.*,
+        users.full_name,
+        users.photo
     FROM classes
-    WHERE teacher_id = ?
-    AND archived = 0
-    ORDER BY created_at DESC
+    JOIN users
+    ON classes.teacher_id = users.id
+    WHERE classes.teacher_id = ?
+    AND classes.archived = 0
+    ORDER BY classes.created_at DESC
 ");
 
 $stmt->execute([$_SESSION['user_id']]);
@@ -39,384 +44,27 @@ $classes = $stmt->fetchAll();
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f1f3f4;
-    overflow-x:hidden;
-}
-
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:64px;
-    background:white;
-    border-bottom:1px solid #dadce0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    z-index:999;
-}
-
-.nav-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.menu-btn{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.menu-btn:hover{
-    background:#f1f3f4;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    font-size:28px;
-}
-
-.logo-text{
-    font-size:30px;
-    color:#5f6368;
-    font-weight:400;
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.icon-btn{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:18px;
-}
-
-.icon-btn:hover{
-    background:#f1f3f4;
-}
-
-.profile{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:#d93025;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-}
-
-.sidebar{
-    position:fixed;
-    top:64px;
-    left:0;
-    bottom:0;
-    width:240px;
-    background:#f8f9fa;
-    border-right:1px solid #dadce0;
-    overflow-y:auto;
-}
-
-.sidebar{
-    transition:transform .3s ease;
-}
-
-.sidebar.closed{
-    transform:translateX(-240px);
-}
-
-.sidebar-menu{
-    padding:12px 0;
-}
-
-.sidebar-item{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    height:48px;
-    padding:0 20px;
-    color:#202124;
-    text-decoration:none;
-    border-top-right-radius:24px;
-    border-bottom-right-radius:24px;
-    margin-right:12px;
-    font-size:14px;
-}
-
-.sidebar-item:hover{
-    background:#e8f0fe;
-}
-
-.sidebar-active{
-    background:#c2e7ff;
-    font-weight:600;
-}
-
-.sidebar-title{
-    padding:18px 24px 10px;
-    font-size:12px;
-    color:#5f6368;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.class-link{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    padding:10px 24px;
-    text-decoration:none;
-    color:#202124;
-}
-
-.class-link:hover{
-    background:#e8eaed;
-}
-
-.class-avatar{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#d2e3fc;
-    color:#1967d2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    flex-shrink:0;
-}
-
-.class-info{
-    flex:1;
-}
-
-.class-name{
-    font-size:14px;
-    line-height:1.4;
-}
-
-.class-sub{
-    font-size:12px;
-    color:#5f6368;
-    margin-top:2px;
-}
-
-.main{
-    margin-left:240px;
-    padding-top:88px;
-    padding-left:28px;
-    padding-right:28px;
-    padding-bottom:40px;
-
-    transition:.3s ease;
-}
-
-.main.full{
-    margin-left:0;
-}
-
-.banner{
-    background:#d3e3fd;
-    border-radius:24px;
-    padding:26px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:24px;
-}
-
-.banner-left{
-    display:flex;
-    gap:20px;
-    align-items:flex-start;
-}
-
-.banner-icon{
-    font-size:60px;
-}
-
-.banner-title{
-    font-size:18px;
-    color:#202124;
-    margin-bottom:8px;
-}
-
-.banner-desc{
-    color:#3c4043;
-    font-size:14px;
-    line-height:1.5;
-    max-width:780px;
-}
-
-.banner-link{
-    color:#1967d2;
-    text-decoration:none;
-    font-size:14px;
-}
-
-.class-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:24px;
-    align-items:start;
-}
-
-.class-card{
-    background:white;
-    border:1px solid #dadce0;
-    border-radius:14px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-}
-
-.class-card a{
-    text-decoration:none;
-    color:inherit;
-    display:block;
-} 
-
-.class-card:hover{
-    box-shadow:0 4px 12px rgba(0,0,0,0.12);
-}
-
-.class-active{
-    background:#c2e7ff;
-}
-
-.class-active .class-name{
-    font-weight:600;
-}
-
-.card-header{
-    height:110px;
-    padding:16px;
-    position:relative;
-
-    background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg');
-
-    background-size:cover;
-    background-position:center;
-
-    color:white;
-    overflow:hidden;
-}
-
-.card-header::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,0.35);
-}
-
-.card-header-content{
-    position:relative;
-    z-index:2;
-}
-
-.card-title{
-    font-size:16px;
-    font-weight:600;
-    line-height:1.3;
-    margin-bottom:4px;
-
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-}
-
-.card-subtitle{
-    font-size:13px;
-    opacity:0.95;
-    margin-bottom:4px;
-}
-
-.teacher{
-    font-size:12px;
-    opacity:0.95;
-}
-
-.card-body{
-    height:80px;
-    background:white;
-}
-
-.card-footer{
-    height:48px;
-    border-top:1px solid #dadce0;
-
-    display:flex;
-    justify-content:flex-end;
-    align-items:center;
-
-    gap:20px;
-    padding:0 18px;
-
-    color:#5f6368;
-}
-
-.footer-icon{
-    cursor:pointer;
-    font-size:20px;
-}
-
-.footer-icon:hover{
-    color:#202124;
-}
-
-</style>
-
 </head>
 
-<body>
+<body class="bg-gray-100 overflow-x-hidden w-full">
 
-<div class="navbar">
+<div class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-300 flex items-center justify-between px-3 md:px-5 z-50">
+    <div class="flex items-center gap-4">
 
-    <div class="nav-left">
-
-        <div class="menu-btn" id="menuToggle">
+        <button id="menuToggle"
+            class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-xl hover:bg-gray-100">
 
             ☰
 
-        </div>
+        </button>
 
-        <div class="logo">
+        <div class="flex items-center gap-2">
 
-            <div class="logo-icon">
-
+            <div class="text-xl md:text-3xl">
                 📚
-
             </div>
 
-            <div class="logo-text">
+            <div class="text-xs sm:text-sm md:text-2xl text-gray-600 leading-tight max-w-[120px] sm:max-w-none">
 
                 Sistem Pengumpulan Tugas
 
@@ -426,32 +74,127 @@ body{
 
     </div>
 
-    <div class="nav-right">
+    <div class="flex items-center gap-3 relative">
 
-    <a href="create_class.php"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
 
-        + Buat Kelas
+<a href="create_class.php"
+class="bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium">
 
-    </a>
++ Buat Kelas
 
-    <a href="../logout.php"
-       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+</a>
 
-        Logout
 
-    </a>
 
-    </div>
+<button 
+onclick="profileMenu()"
+class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:ring-2 hover:ring-blue-300">
+
+
+<?php if(!empty($_SESSION['photo'])): ?>
+
+<img 
+src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+class="w-full h-full object-cover">
+
+
+<?php else: ?>
+
+<div class="w-full h-full bg-blue-600 text-white flex items-center justify-center font-bold">
+
+<?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
 
 </div>
 
-<div class="sidebar" id="sidebar">
+<?php endif; ?>
 
-    <div class="sidebar-menu">
+
+</button>
+
+
+
+<!-- PROFILE POPUP -->
+
+<div id="profileBox"
+class="hidden absolute right-0 top-12 w-[280px] md:w-80 bg-white rounded-2xl shadow-xl border p-5 z-50">
+
+<div class="flex justify-center">
+
+
+<?php if(!empty($_SESSION['photo'])): ?>
+
+<img 
+src="../<?= htmlspecialchars($_SESSION['photo']) ?>"
+class="w-24 h-24 rounded-full object-cover">
+
+
+<?php else: ?>
+
+<div class="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl">
+
+<?= strtoupper(substr($_SESSION['full_name'],0,1)) ?>
+
+</div>
+
+<?php endif; ?>
+
+
+</div>
+
+
+
+<h2 class="text-center mt-3 text-lg font-semibold">
+
+<?= htmlspecialchars($_SESSION['full_name']) ?>
+
+</h2>
+
+
+<p class="text-center text-gray-500 text-sm">
+
+<?= htmlspecialchars($_SESSION['username']) ?>
+
+</p>
+
+
+
+<a href="profile.php"
+
+class="block text-center mt-5 border rounded-full py-2 text-blue-600 hover:bg-gray-100">
+
+Manage Profile
+
+</a>
+
+
+
+<a href="../logout.php"
+
+class="block text-center mt-3 bg-gray-800 text-white rounded-full py-2">
+
+Sign out
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+</div>
+
+<div id="overlay"
+    class="hidden fixed inset-0 bg-black/40 z-40 md:hidden">
+</div>
+
+<div id="sidebar"
+class="fixed top-16 left-0 bottom-0 w-[230px] bg-gray-50 border-r border-gray-300 overflow-y-auto transition-transform duration-300 z-50 -translate-x-full">
+    <div class="py-3">
 
         <a href="dashboard.php"
-           class="sidebar-item sidebar-active">
+           class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full bg-blue-200 font-semibold">
 
             🏠
             <span>Home</span>
@@ -459,30 +202,34 @@ body{
         </a>
 
         <a href="create_class.php"
-            class="sidebar-item">
-
+            class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
              ➕
-             <span>Buat Kelas</span>
-
+            <span>Buat Kelas</span>
         </a>
 
         <a href="create_task.php"
-            class="sidebar-item">
-    
-             📝
-             <span>Buat Tugas</span>
+            class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
+            📝
+            <span>Buat Tugas</span>
+        </a>
+
+        <a href="laporan_tugas.php"
+            class="flex items-center gap-4 h-12 px-5 hover:bg-blue-100">
+
+            📊
+            <span>
+            Rekapan Tugas
+            </span>
 
         </a>
 
         <a href="tasks.php"
-            class="sidebar-item">
-
+            class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100">
             📋
             <span>Semua Tugas</span>
-
         </a>
 
-        <div class="sidebar-title">
+        <div class="px-6 pt-5 pb-2 text-xs text-gray-500 font-bold uppercase">
 
             KELAS ANDA
 
@@ -491,25 +238,26 @@ body{
         <?php foreach($classes as $class): ?>
 
             <a href="manage_class.php?id=<?= $class['id'] ?>"
-                class="class-link <?= (isset($_GET['id']) && $_GET['id'] == $class['id']) ? 'class-active' : '' ?>">
+                class="flex items-start gap-3 px-6 py-3 hover:bg-gray-200
+                <?= (isset($_GET['id']) && $_GET['id'] == $class['id']) ? 'bg-blue-200' : '' ?>">
 
-                <div class="class-avatar">
+                <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
 
                     <?= strtoupper(substr($class['class_name'],0,1)) ?>
 
                 </div>
 
-                <div class="class-info">
+                <div class="flex-1">
 
-                    <div class="class-name">
+                    <div class="text-sm font-medium">
 
                         <?= htmlspecialchars($class['class_name']) ?>
 
                     </div>
 
-                    <div class="class-sub">
+                    <div class="text-xs text-gray-500 mt-1">
 
-                        <?= htmlspecialchars($class['description']) ?>
+                        <?= htmlspecialchars($class['DESCRIPTION']) ?>
 
                     </div>
 
@@ -520,7 +268,7 @@ body{
         <?php endforeach; ?>
 
         <a href="archived.php"
-           class="sidebar-item mt-4">
+            class="flex items-center gap-4 h-12 px-5 mr-3 rounded-r-full hover:bg-blue-100 mt-4">
 
             📦
             <span>Archived classes</span>
@@ -531,86 +279,80 @@ body{
 
 </div>
 
-<div class="main" id="mainContent">
+<div id="mainContent"
+    class="ml-0 pt-20 px-3 sm:px-5 md:px-7 pb-10 w-full transition-all duration-300">
+    <div class="bg-blue-100 rounded-3xl p-4 mb-6">
 
-    <div class="banner">
+    <div class="flex items-start gap-3">
 
-        <div class="banner-left">
+        <div class="text-4xl">
+            ✍️
+        </div>
 
-            <div class="banner-icon">
+        <div>
 
-                ✍️
-
+            <div class="text-base font-semibold mb-2">
+                Dashboard Dosen
             </div>
 
-            <div>
-
-                <div class="banner-title">
-
-                    Dashboard Dosen
-
-                </div>
-
-                <div class="banner-desc">
-
-                   Kelola kelas, buat tugas, melihat pengumpulan tugas mahasiswa dan memberikan nilai.
-
-                </div>
-
+            <div class="text-gray-700 text-xs">
+                Kelola kelas, buat tugas, melihat pengumpulan tugas mahasiswa dan memberikan nilai.
             </div>
 
         </div>
 
-        <a href="#"
-           class="banner-link">
-
-            Learn more
-
-        </a>
-
     </div>
 
-<div class="class-grid">
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
 <?php foreach($classes as $class): ?>
 
-    <div class="class-card">
-
+    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden flex flex-col min-h-[200px] sm:min-h-[220px] hover:shadow-xl transition duration-300">
         <a href="manage_class.php?id=<?= $class['id'] ?>" style="text-decoration:none;color:inherit;">
 
-            <div class="card-header">
+            <div class="relative h-28 p-4 text-white bg-cover bg-center"
+                style="background-image:url('https://www.gstatic.com/classroom/themes/img_graduation.jpg')">
 
-                <div class="card-header-content">
+                <div class="absolute inset-0 bg-black/40"></div>
 
-                    <div class="card-title">
+                <div class="relative z-10">
+
+                    <div class="text-lg font-semibold">
                         <?= htmlspecialchars($class['class_name']) ?>
                     </div>
 
-                    <div class="card-subtitle">
+                    <div class="text-sm opacity-90">
                         <?= htmlspecialchars($class['class_code']) ?>
                     </div>
 
-                    <div class="teacher">
-                        <?= htmlspecialchars($_SESSION['full_name']) ?>
+                   <div class="text-xs opacity-90 mt-2">
+
+                        <?= htmlspecialchars($class['full_name']) ?>
+
                     </div>
 
                 </div>
 
             </div>
 
-            <div class="card-body"></div>
-
+            <div class="p-4 flex-1">
+                <p class="text-sm text-gray-600">
+                    <?= htmlspecialchars($class['DESCRIPTION'] ?? 'Tidak ada deskripsi') ?>
+                </p>
+            </div>
         </a>
 
-        <div class="card-footer">
+        <div class="h-12 border-t border-gray-300 flex justify-end items-center gap-5 px-4 text-gray-500">
 
         <a href="manage_class.php?id=<?= $class['id'] ?>"
-            class="footer-icon"
+            class="text-xl hover:text-black"
             title="Buka Kelas">
             📁
         </a>
 
-        <button class="footer-icon">
+        <button class="text-xl hover:text-black">
             ⋮
         </button>
 
@@ -624,16 +366,62 @@ body{
 
 <script>
 
-const menuToggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-const mainContent = document.getElementById('mainContent');
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const mainContent = document.getElementById("mainContent");
 
-menuToggle.addEventListener('click', function(){
+const isMobile = () => window.innerWidth < 768;
 
-    sidebar.classList.toggle('closed');
-    mainContent.classList.toggle('full');
+// Menu selalu terbuka di awal, baik di HP maupun laptop
+let sidebarOpen = true;
 
+function openSidebar() {
+    sidebarOpen = true;
+    sidebar.classList.remove("-translate-x-full");
+
+    if (isMobile()) {
+        overlay.classList.remove("hidden");
+        mainContent.classList.remove("md:ml-[240px]");
+        mainContent.classList.add("ml-0");
+    } else {
+        overlay.classList.add("hidden");
+        mainContent.classList.remove("ml-0");
+        mainContent.classList.add("md:ml-[240px]");
+    }
+}
+
+function closeSidebar() {
+    sidebarOpen = false;
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+    mainContent.classList.remove("md:ml-[240px]");
+    mainContent.classList.add("ml-0");
+}
+
+menuToggle.addEventListener("click", () => {
+    sidebarOpen ? closeSidebar() : openSidebar();
 });
+
+overlay.addEventListener("click", () => {
+    closeSidebar();
+});
+
+window.addEventListener("resize", () => {
+    // Pertahankan status terbuka/tertutup saat ukuran layar berubah
+    sidebarOpen ? openSidebar() : closeSidebar();
+});
+
+// Set tampilan awal sesuai status sidebarOpen
+sidebarOpen ? openSidebar() : closeSidebar();
+
+function profileMenu(){
+
+    const box = document.getElementById('profileBox');
+
+    box.classList.toggle('hidden');
+
+}
 
 </script>
 
